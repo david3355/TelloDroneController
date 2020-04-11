@@ -57,27 +57,46 @@ namespace TelloDroneController
 
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
         {
-            switch (e.Key)
+            try
             {
-                case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, Command.FORWARD, "20"); break;
-                case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, Command.BACK, "20"); break;
-                case Key.A: HandleKeyEvent(KeyDown, img_left_gray, Command.LEFT, "20"); break;
-                case Key.D: HandleKeyEvent(KeyDown, img_right_gray, Command.RIGHT, "20"); break;
-                case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, Command.UP, "20"); break;
-                case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, Command.DOWN, "20"); break;
-                case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray, Command.ROTATE_COUNTER_CLOCKWISE, "100"); break;
-                case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray, Command.ROTATE_CLOCKWISE, "100"); break;
-                case Key.Space: HandleKeyEvent(KeyDown, img_land_gray, Command.LAND); break;
-                case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray, Command.EMERGENCY); break;
-                case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray, Command.TAKEOFF); break;
+                switch (e.Key)
+                {
+                    case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, TelloCommand.Forward.GetCommand(20)); break;
+                    case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, TelloCommand.Back.GetCommand(20)); break;
+                    case Key.A: HandleKeyEvent(KeyDown, img_left_gray, TelloCommand.Left.GetCommand(20)); break;
+                    case Key.D: HandleKeyEvent(KeyDown, img_right_gray, TelloCommand.Right.GetCommand(20)); break;
+                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, TelloCommand.Up.GetCommand(20)); break;
+                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, TelloCommand.Down.GetCommand(20)); break;
+                    case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray, TelloCommand.RotateCounterClockwise.GetCommand(100)); break;
+                    case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray, TelloCommand.RotateClockwise.GetCommand(100)); break;
+                    case Key.Space: HandleKeyEvent(KeyDown, img_land_gray, TelloCommand.Land.GetCommand()); break;
+                    case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray, TelloCommand.Emergency.GetCommand()); break;
+                    case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray, TelloCommand.TakeOff.GetCommand()); break;
+                }
             }
+            catch (CommandIntegerParamException ie)
+            {
+                txt_response.Text = ie.Message;
+                txt_response.Background = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
+            }
+            catch (CommandStringParamException se)
+            {
+                txt_response.Text = se.Message;
+                txt_response.Background = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
+            }
+            catch (DroneCurveException ce)
+            {
+                txt_response.Text = ce.Message;
+                txt_response.Background = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
+            }
+
         }
 
-        private void HandleKeyEvent(bool KeyDown, Image ActionImage, Command DroneCommand, string Parameter = "")
+        private void HandleKeyEvent(bool KeyDown, Image ActionImage, string DroneCommand)
         {
             if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
             else ActionImage.Visibility = Visibility.Visible;
-            if (client != null && KeyDown) client.SendCommand(DroneCommand, Parameter);
+            if (client != null && KeyDown) client.SendCommand(DroneCommand);
         }
 
         private void ProcessDroneMessage(string SenderHostAddress, int SenderPort, string LastCommand, string Response)
@@ -123,8 +142,15 @@ namespace TelloDroneController
         private void btn_start_Click(object sender, RoutedEventArgs e)
         {
             Init();
-            client.SendCommand(Command.COMMAND);
+            client.SendCommand(TelloCommand.Command.GetCommand());
             btn_start.IsEnabled = false;
+            menu_curve_editor.IsEnabled = true;
+        }
+
+        private void menu_curve_editor_Click(object sender, RoutedEventArgs e)
+        {
+            CurveEditor ceditor = new CurveEditor(client);
+            ceditor.Show();
         }
     }
 }

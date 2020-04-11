@@ -3,6 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Name="window_drone_controller"  Title="Drone controller" Height="350" Width="525" KeyDown="window_drone_controller_KeyDown" KeyUp="window_drone_controller_KeyUp" Closing="window_drone_controller_Closing" Icon="img/controller.png">
     <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Height="Auto">
+            <MenuItem Header="Edit">
+                <MenuItem Name="menu_curve_editor" IsEnabled="False" Header="Curve editor" Click="menu_curve_editor_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top">
             <Label VerticalAlignment="Center">Drone Host:</Label>
             <TextBox Name="txt_drone_ip" Width="200" VerticalAlignment="Center">127.0.0.1</TextBox>
@@ -11,7 +16,7 @@
             <TextBox Name="txt_battery" Foreground="White" FontWeight="Bold" Width="50" TextAlignment="Center" FontSize="15" VerticalAlignment="Center" Margin="5"></TextBox>
         </StackPanel>
         <TextBox Name="txt_response" IsReadOnly="True" VerticalAlignment="Center" Height="30" DockPanel.Dock="Top"></TextBox>
-        <Grid Name="txt_status" Height="Auto"  Background="#FFFFDEDE" DockPanel.Dock="Top" >
+        <Grid Height="Auto"  Background="#FFFFDEDE" DockPanel.Dock="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -25,7 +30,7 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Label VerticalAlignment="Center">Speed:</Label>
                 <Label Name="status_speed" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" ></Label>
-                <Label VerticalAlignment="Center"></Label>
+                <Label VerticalAlignment="Center">cm/s</Label>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Label VerticalAlignment="Center">Highest temp:</Label>

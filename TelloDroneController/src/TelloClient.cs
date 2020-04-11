@@ -6,7 +6,7 @@ using CommonUdpSocket;
 
 namespace TelloDroneController.src
 {
-    class TelloClient
+    public class TelloClient
     {
         public TelloClient(string DroneIp)
         {
@@ -27,13 +27,12 @@ namespace TelloDroneController.src
         private event DroneStatusHandler receiveStatusEvent;
         private Queue<string> commandQueue;
 
-        public void SendCommand(Command DroneCommand, string Parameter = "")
+        public void SendCommand(string DroneCommand)
         {
-            string command = Commander.GetCommand(DroneCommand, Parameter);
-            commanderSender.Send(command);
+            commanderSender.Send(DroneCommand);
             lock (commandQueue)
             {
-                commandQueue.Enqueue(command);
+                commandQueue.Enqueue(DroneCommand);
             }
         }
 

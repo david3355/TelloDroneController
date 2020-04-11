@@ -1,0 +1,29 @@
+﻿<Window x:Class="TelloDroneController.CurveEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Curve Editor" Width="650" MinWidth="650"  MaxWidth="650" Height="550"  MaxHeight="550" MinHeight="550" Icon="img/controller.png" Loaded="Window_Loaded">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Height="40" Orientation="Horizontal">
+            <Button Name="btn_curve"  Height="25" Width="65" Margin="5" VerticalAlignment="Center" Click="btn_curve_Click">Fly curve</Button>
+
+            <Label VerticalAlignment="Center">Speed:</Label>
+            <TextBox Name="txt_speed" FontWeight="Bold" Width="40" TextAlignment="Center" VerticalAlignment="Center" Margin="5">30</TextBox>
+
+            <Label VerticalAlignment="Center">X1:</Label>
+            <Label Name="txt_x1" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+
+            <Label VerticalAlignment="Center">Y1:</Label>
+            <Label Name="txt_y1" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+
+            <Label VerticalAlignment="Center">X2:</Label>
+            <Label Name="txt_x2" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+            
+            <Label VerticalAlignment="Center">Y2:</Label>
+            <Label Name="txt_y2" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+
+        </StackPanel>
+        <Canvas Name="drawboard" DockPanel.Dock="Bottom" Background="White" MouseMove="Drawboard_MouseMove" MouseLeftButtonDown="Drawboard_MouseLeftButtonDown"
+      Width="550" Height="450"
+      VerticalAlignment="Center" HorizontalAlignment="Center"></Canvas>
+    </DockPanel>
+</Window>

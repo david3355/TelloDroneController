@@ -58,10 +58,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="src\Command.cs" />
+    <Compile Include="CurveEditor.xaml.cs">
+      <DependentUpon>CurveEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\curve\Circle.cs" />
+    <Compile Include="src\TelloCommander.cs" />
     <Compile Include="src\DroneStatusHandler.cs" />
     <Compile Include="src\TelloClient.cs" />
     <Compile Include="src\TelloResponseCallback.cs" />
+    <Page Include="CurveEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
