@@ -18,7 +18,7 @@ namespace TelloDroneController.src
             commanderSender.Server("0.0.0.0", 9000);
             commanderSender.Receive(ProcessCommandResponse);
             commanderSender.Client(DroneIp, 8889);
-
+            speed = DEFAULT_SPEED;
         }
 
         private UDPSocket commanderSender;
@@ -26,6 +26,35 @@ namespace TelloDroneController.src
         private event TelloResponseCallback receiveEvent;
         private event DroneStatusHandler receiveStatusEvent;
         private Queue<string> commandQueue;
+
+        private int speed;
+        private const int DEFAULT_SPEED = 30;
+
+        public int CurrentSpeed
+        {
+            get { return speed; }
+        }
+
+        public bool IncreaseSpeed(int By = 5)
+        {
+            int newSpeed = CurrentSpeed + By;
+            try
+            {
+                string command = TelloCommand.SetSpeed.GetCommand(newSpeed);
+                SendCommand(command);
+                speed = newSpeed;
+                return true;
+            }
+            catch (CommandIntegerParamException e)
+            {
+                return false;
+            }
+        }
+
+        public bool DecreaseSpeed(int By = 5)
+        {
+            return IncreaseSpeed(-By);
+        }
 
         public void SendCommand(string DroneCommand)
         {

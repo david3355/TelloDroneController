@@ -59,7 +59,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <Grid Grid.Column="0" Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Column="0" Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -71,7 +76,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Image Name="img_forward" Grid.Column="1" Grid.Row="0" Source="img/forward.png" />
-                <Image Name="img_forward_gray" Grid.Column="1" Grid.Row="0" Source="img/forward_gray.png" ToolTip="Go forward (W)"  />
+                <Image Name="img_forward_gray" Grid.Column="1" Source="img/forward_gray.png" ToolTip="Go forward (W)" />
 
                 <Image Name="img_backward" Grid.Column="1" Grid.Row="2" Source="img/backward.png" />
                 <Image Name="img_backward_gray" Grid.Column="1" Grid.Row="2" Source="img/backward_gray.png" ToolTip="Go backward (S)" />
@@ -81,9 +86,15 @@
                 
                 <Image Name="img_right" Grid.Column="2" Grid.Row="1" Source="img/right.png" />
                 <Image Name="img_right_gray" Grid.Column="2" Grid.Row="1" Source="img/right_gray.png" ToolTip="Go right (D)" />
+
+                <Image Name="img_dec_speed" Grid.Column="0" Grid.Row="0" Margin="5" Source="img/decrease.png" />
+                <Image Name="img_dec_speed_gray" Grid.Column="0" Margin="5" Source="img/decrease_gray.png" ToolTip="Decrease speed (Q)" />
+
+                <Image Name="img_inc_speed" Grid.Column="2" Grid.Row="0" Margin="5" Source="img/increase.png" />
+                <Image Name="img_inc_speed_gray" Grid.Column="2" Margin="5" Source="img/increase_gray.png" ToolTip="Increase speed (E)" />
             </Grid>
 
-            <Grid Grid.Column="1" Margin="30">
+            <Grid Grid.Column="1" Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -106,6 +117,12 @@
                 <Image Name="img_cw" Grid.Column="2" Grid.Row="1" Source="img/clockwise.png" />
                 <Image Name="img_cw_gray" Grid.Column="2" Grid.Row="1" Source="img/clockwise_gray.png" ToolTip="Rotate left (Left arrow)"  />
             </Grid>
+            
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Label VerticalAlignment="Center">Current speed:</Label>
+                <Label Name="txt_current_speed" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"></Label>
+                <Label VerticalAlignment="Center">cm/s</Label>
+            </StackPanel>
         </Grid>
     </DockPanel>
 </Window>

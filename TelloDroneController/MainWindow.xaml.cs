@@ -37,6 +37,7 @@ namespace TelloDroneController
                 client = new TelloClient(ip);
                 client.AddReceiver(ProcessDroneMessage);
                 client.AddStatusReceiver(DroneStatusHandler);
+                txt_current_speed.Content = client.CurrentSpeed;
             }
             catch (Exception e)
             {
@@ -72,6 +73,9 @@ namespace TelloDroneController
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray, TelloCommand.Land.GetCommand()); break;
                     case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray, TelloCommand.Emergency.GetCommand()); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray, TelloCommand.TakeOff.GetCommand()); break;
+
+                    case Key.Q: HandleKeyEvent(KeyDown, img_dec_speed_gray); if (KeyDown) client.DecreaseSpeed(); break;
+                    case Key.E: HandleKeyEvent(KeyDown, img_inc_speed_gray); if (KeyDown) client.IncreaseSpeed(); break;
                 }
             }
             catch (CommandIntegerParamException ie)
@@ -89,14 +93,14 @@ namespace TelloDroneController
                 txt_response.Text = ce.Message;
                 txt_response.Background = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
             }
-
+            txt_current_speed.Content = client.CurrentSpeed;
         }
 
-        private void HandleKeyEvent(bool KeyDown, Image ActionImage, string DroneCommand)
+        private void HandleKeyEvent(bool KeyDown, Image ActionImage, string DroneCommand=null)
         {
             if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
             else ActionImage.Visibility = Visibility.Visible;
-            if (client != null && KeyDown) client.SendCommand(DroneCommand);
+            if (client != null && KeyDown && DroneCommand != null) client.SendCommand(DroneCommand);
         }
 
         private void ProcessDroneMessage(string SenderHostAddress, int SenderPort, string LastCommand, string Response)
