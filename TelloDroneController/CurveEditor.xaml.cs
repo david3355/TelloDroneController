@@ -50,7 +50,7 @@ namespace TelloDroneController
             oX = -(B / (2 * A));
             oY = -(C / (2 * A));
             R = Math.Sqrt((Math.Pow(B, 2) + Math.Pow(C, 2) - 4 * A * D) / (4 * Math.Pow(A, 2)));
-            Validate();
+            btn_curve.IsEnabled = Validate();
         }
 
         private void SetCircle()
@@ -96,26 +96,30 @@ namespace TelloDroneController
             double x3 = P2.Origo.X;
             double y3 = P2.Origo.Y;
 
-            txt_x1.Content = x2;
-            txt_y1.Content = y2;
-            txt_x2.Content = x3;
-            txt_y2.Content = y3;
+            txt_x1.Content = Math.Round(x2);
+            txt_y1.Content = Math.Round(y2);
+            txt_x2.Content = Math.Round(x3);
+            txt_y2.Content = Math.Round(y3);
+            txt_r.Content = Math.Round(R);
             CalculateCircle(x1, y1, x2, y2, x3, y3);
         }
 
-        private void Validate()
+        private bool Validate()
         {
-            if (R < 50 || 1000 < R)
-            {
-                drawboard.Background = red;
-                btn_curve.IsEnabled = false;
-            }
-            else
-            {
-                drawboard.Background = green;
-                btn_curve.IsEnabled = true;
-            }
+            bool valid = Valid(R, 50, 1000, txt_r);
+            valid &= Valid(P1.Origo.X, 20, 500, txt_x1);
+            valid &= Valid(P1.Origo.Y, 20, 500, txt_y1);
+            valid &= Valid(P2.Origo.X, 20, 500, txt_x2);
+            valid &= Valid(P2.Origo.Y, 20, 500, txt_y2);
 
+            return valid;
+        }
+
+        private bool Valid(double Value, double LowerBound, double UpperBound, Label Display)
+        {
+            bool valid = LowerBound <= Value && Value <= UpperBound;
+            Display.Background = valid ? green : red;
+            return valid;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -174,16 +178,16 @@ namespace TelloDroneController
             startPoint = new Circle(new Point(0, 0), drawboard, "S");
             startPoint.Init();
             startPoint.Fill(Colors.Green);
-            P1 = new Circle(new Point(100, 100), drawboard, "P1");
+            P1 = new Circle(new Point(50, 150), drawboard, "P1");
             P1.Init();
-            P2 = new Circle(new Point(200, 0), drawboard, "P2");
+            P2 = new Circle(new Point(175, 130), drawboard, "P2");
             P2.Init();
             points.Add(P1);
             points.Add(P2);
 
             Calculate();
 
-            circle = new Curve(new Point(oX, -oY), drawboard, R, "O");
+            circle = new Curve(new Point(oX, oY), drawboard, R, "O");
             circle.Init();
         }
 

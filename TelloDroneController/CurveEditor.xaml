@@ -10,16 +10,19 @@
             <TextBox Name="txt_speed" FontWeight="Bold" Width="40" TextAlignment="Center" VerticalAlignment="Center" Margin="5">30</TextBox>
 
             <Label VerticalAlignment="Center">X1:</Label>
-            <Label Name="txt_x1" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+            <Label Name="txt_x1" FontWeight="Bold" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5"></Label>
 
             <Label VerticalAlignment="Center">Y1:</Label>
-            <Label Name="txt_y1" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+            <Label Name="txt_y1" FontWeight="Bold" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5"></Label>
 
             <Label VerticalAlignment="Center">X2:</Label>
-            <Label Name="txt_x2" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+            <Label Name="txt_x2" FontWeight="Bold" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5"></Label>
             
             <Label VerticalAlignment="Center">Y2:</Label>
-            <Label Name="txt_y2" FontWeight="Bold" VerticalAlignment="Center" Margin="5"></Label>
+            <Label Name="txt_y2" FontWeight="Bold" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5"></Label>
+
+            <Label VerticalAlignment="Center">R</Label>
+            <Label Name="txt_r" FontWeight="Bold" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5"></Label>
 
         </StackPanel>
         <Canvas Name="drawboard" DockPanel.Dock="Bottom" Background="White" MouseMove="Drawboard_MouseMove" MouseLeftButtonDown="Drawboard_MouseLeftButtonDown"
