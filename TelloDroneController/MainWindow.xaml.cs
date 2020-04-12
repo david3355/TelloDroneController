@@ -58,16 +58,18 @@ namespace TelloDroneController
 
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
         {
+            if (client == null) return;
+            int defaultSpeed = client.CurrentSpeed;
             try
             {
                 switch (e.Key)
                 {
-                    case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, TelloCommand.Forward.GetCommand(20)); break;
-                    case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, TelloCommand.Back.GetCommand(20)); break;
-                    case Key.A: HandleKeyEvent(KeyDown, img_left_gray, TelloCommand.Left.GetCommand(20)); break;
-                    case Key.D: HandleKeyEvent(KeyDown, img_right_gray, TelloCommand.Right.GetCommand(20)); break;
-                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, TelloCommand.Up.GetCommand(20)); break;
-                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, TelloCommand.Down.GetCommand(20)); break;
+                    case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, TelloCommand.Forward.GetCommand(defaultSpeed)); break;
+                    case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, TelloCommand.Back.GetCommand(defaultSpeed)); break;
+                    case Key.A: HandleKeyEvent(KeyDown, img_left_gray, TelloCommand.Left.GetCommand(defaultSpeed)); break;
+                    case Key.D: HandleKeyEvent(KeyDown, img_right_gray, TelloCommand.Right.GetCommand(defaultSpeed)); break;
+                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, TelloCommand.Up.GetCommand(defaultSpeed)); break;
+                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, TelloCommand.Down.GetCommand(defaultSpeed)); break;
                     case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray, TelloCommand.RotateCounterClockwise.GetCommand(100)); break;
                     case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray, TelloCommand.RotateClockwise.GetCommand(100)); break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray, TelloCommand.Land.GetCommand()); break;

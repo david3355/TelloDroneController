@@ -10,7 +10,7 @@ namespace CommonUdpSocket
     public class UDPSocket
     {
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        private const int bufSize = 8 * 1024;
+        private const int bufSize = 1024;
         private State state = new State();
         private EndPoint endpointSender = new IPEndPoint(IPAddress.Any, 0);
         private AsyncCallback recv = null;
