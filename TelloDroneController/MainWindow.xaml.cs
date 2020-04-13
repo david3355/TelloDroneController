@@ -59,19 +59,20 @@ namespace TelloDroneController
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
         {
             if (client == null) return;
-            int defaultSpeed = client.CurrentSpeed;
+            int defaultDistance = 50;
+            int defaultTurnDegree = 20;
             try
             {
                 switch (e.Key)
                 {
-                    case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, TelloCommand.Forward.GetCommand(defaultSpeed)); break;
-                    case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, TelloCommand.Back.GetCommand(defaultSpeed)); break;
-                    case Key.A: HandleKeyEvent(KeyDown, img_left_gray, TelloCommand.Left.GetCommand(defaultSpeed)); break;
-                    case Key.D: HandleKeyEvent(KeyDown, img_right_gray, TelloCommand.Right.GetCommand(defaultSpeed)); break;
-                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, TelloCommand.Up.GetCommand(defaultSpeed)); break;
-                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, TelloCommand.Down.GetCommand(defaultSpeed)); break;
-                    case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray, TelloCommand.RotateCounterClockwise.GetCommand(100)); break;
-                    case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray, TelloCommand.RotateClockwise.GetCommand(100)); break;
+                    case Key.W: HandleKeyEvent(KeyDown, img_forward_gray, TelloCommand.Forward.GetCommand(defaultDistance)); break;
+                    case Key.S: HandleKeyEvent(KeyDown, img_backward_gray, TelloCommand.Back.GetCommand(defaultDistance)); break;
+                    case Key.A: HandleKeyEvent(KeyDown, img_left_gray, TelloCommand.Left.GetCommand(defaultDistance)); break;
+                    case Key.D: HandleKeyEvent(KeyDown, img_right_gray, TelloCommand.Right.GetCommand(defaultDistance)); break;
+                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray, TelloCommand.Up.GetCommand(defaultDistance)); break;
+                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray, TelloCommand.Down.GetCommand(defaultDistance)); break;
+                    case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray, TelloCommand.RotateCounterClockwise.GetCommand(defaultTurnDegree)); break;
+                    case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray, TelloCommand.RotateClockwise.GetCommand(defaultTurnDegree)); break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray, TelloCommand.Land.GetCommand()); break;
                     case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray, TelloCommand.Emergency.GetCommand()); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray, TelloCommand.TakeOff.GetCommand()); break;
