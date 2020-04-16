@@ -46,18 +46,26 @@ namespace CommonUdpSocket
             }, state);
         }
 
-        public void Receive(UdpResponseCallback ReadCallback)
+        public void Receive(UdpResponseCallback ReadCallback, UdpErrorCallback ErrorCallback)
         {
             socket.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv = (asyncResult) =>
             {
-                State so = (State)asyncResult.AsyncState;
-                int bytes = socket.EndReceiveFrom(asyncResult, ref endpointSender);
-                socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv, so);
-                string data = Encoding.ASCII.GetString(so.buffer, 0, bytes);
-                string senderHost = (endpointSender as IPEndPoint).Address.ToString();
-                int senderPort = (endpointSender as IPEndPoint).Port;
-                if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
+                try
+                {
+                    State so = (State)asyncResult.AsyncState;
+                    int bytes = socket.EndReceiveFrom(asyncResult, ref endpointSender);
+                    socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv, so);
+                    string data = Encoding.ASCII.GetString(so.buffer, 0, bytes);
+                    string senderHost = (endpointSender as IPEndPoint).Address.ToString();
+                    int senderPort = (endpointSender as IPEndPoint).Port;
+                    if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
+                }
+                catch (SocketException se)
+                {
+                    if (ErrorCallback != null && se != null) ErrorCallback(se.Message); 
+                }
             }, state);
+
         }
     }
 }

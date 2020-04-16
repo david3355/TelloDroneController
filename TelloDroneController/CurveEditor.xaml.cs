@@ -196,7 +196,7 @@ namespace TelloDroneController
             try
             {
                 int speed = int.Parse(txt_speed.Text);
-                client.SendCommand(TelloCommand.Curve.GetCommand((int)P1.Origo.X, (int)P1.Origo.Y, 0, (int)P2.Origo.X, (int)P2.Origo.Y, 0, speed));
+                client.Curve((int)P1.Origo.X, (int)P1.Origo.Y, 0, (int)P2.Origo.X, (int)P2.Origo.Y, 0, speed);
             }
             catch (CommandIntegerParamException ie)
             {

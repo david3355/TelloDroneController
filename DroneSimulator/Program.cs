@@ -18,7 +18,7 @@ namespace DroneSimulator
             String host = "0.0.0.0";
 
             server.Server(host, COMMAND_LISTENER_PORT);
-            server.Receive(ProcessMessageFromClient);
+            server.Receive(ProcessMessageFromClient, ProcessError);
             Console.WriteLine("Drone simulator is running on [{0}:{1}]", host, COMMAND_LISTENER_PORT);
 
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
@@ -51,8 +51,19 @@ namespace DroneSimulator
                 statusReporter.Client(SenderHostAddress, STATUS_PORT);
                 timer.Start();
             }
+            ResponseDelay(2000);
             server.Send("ok");
             Console.WriteLine("Processing from [{1}:{2}]: {0}", Message, SenderHostAddress, SenderPort);
+        }
+
+        private static void ProcessError(string ErrorMessage)
+        {
+            Console.WriteLine("Error while receiving: {0}", ErrorMessage);
+        }
+
+        private static void ResponseDelay(int DelayMsec)
+        {
+            System.Threading.Thread.Sleep(DelayMsec);
         }
 
         private static void SendDroneStatus(string Status)
