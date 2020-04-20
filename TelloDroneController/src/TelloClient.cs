@@ -17,9 +17,9 @@ namespace TelloDroneController.src
             commanderSender = new UDPSocket();
             droneStatusReceiver = new UDPSocket();
             droneStatusReceiver.Server("0.0.0.0", 8890);
-            droneStatusReceiver.Receive(ProcessDroneStatus, ProcessConnectionError);
+            droneStatusReceiver.Receive(ProcessDroneStatus);
             commanderSender.Server("0.0.0.0", 9000);
-            commanderSender.Receive(ProcessCommandResponse, ProcessConnectionError);
+            commanderSender.Receive(ProcessCommandResponse);
             commanderSender.Client(DroneIp, 8889);
             speed = DEFAULT_SPEED;
         }
@@ -74,13 +74,13 @@ namespace TelloDroneController.src
             return IncreaseSpeed(-By);
         }
 
-        private void ExecuteCommandAsync(string DroneCommand)
+        private void ExecuteCommandSync(string DroneCommand)
         {
             Thread executor = new Thread(new ParameterizedThreadStart(AsyncCommandExecutor));
             executor.Start(DroneCommand);
         }
 
-        private void ExecuteCommand(string DroneCommand)
+        private void ExecuteCommandAsync(string DroneCommand)
         {
             SendCommand(DroneCommand);
         }
@@ -93,6 +93,7 @@ namespace TelloDroneController.src
         private void SendCommand(string DroneCommand)
         {
             commanderSender.Send(DroneCommand);
+            eventHandler.CommandSent(DroneCommand, true);
         }
 
         private void SendCommandWaitResponse(string DroneCommand)
@@ -102,6 +103,7 @@ namespace TelloDroneController.src
                 if (commandQueue.Count > 0) return;
                 commandQueue.Enqueue(DroneCommand);
                 commanderSender.Send(DroneCommand);
+                eventHandler.CommandSent(DroneCommand, false);
             }
 
             lock (responseQueue)
@@ -143,11 +145,6 @@ namespace TelloDroneController.src
             //}
         }
 
-        private void ProcessConnectionError(string ErrorMessage)
-        {
-            if (eventHandler != null) eventHandler.TelloConnectionError(ErrorMessage);
-        }
-
         private void ProcessDroneStatus(string SenderHostAddress, int SenderPort, string Response)
         {
             Dictionary<string, string> statusValues = new Dictionary<string, string>();
@@ -164,102 +161,102 @@ namespace TelloDroneController.src
 
         public void Command()
         {
-            ExecuteCommandAsync(TelloCommand.Command.GetCommand());
+            ExecuteCommandSync(TelloCommand.Command.GetCommand());
         }
 
         public void TakeOff()
         {
-            ExecuteCommandAsync(TelloCommand.TakeOff.GetCommand());
+            ExecuteCommandSync(TelloCommand.TakeOff.GetCommand());
         }
 
         public void Land()
         {
-            ExecuteCommand(TelloCommand.Land.GetCommand());
+            ExecuteCommandAsync(TelloCommand.Land.GetCommand());
         }
 
         public void Emergency()
         {
-            ExecuteCommand(TelloCommand.Emergency.GetCommand());
+            ExecuteCommandAsync(TelloCommand.Emergency.GetCommand());
         }
 
         public void StreamOn()
         {
-            ExecuteCommandAsync(TelloCommand.StreamOn.GetCommand());
+            ExecuteCommandSync(TelloCommand.StreamOn.GetCommand());
         }
 
         public void StreamOff()
         {
-            ExecuteCommandAsync(TelloCommand.StreamOff.GetCommand());
+            ExecuteCommandSync(TelloCommand.StreamOff.GetCommand());
         }
 
         public void Forward(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Forward.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Forward.GetCommand(DistanceCM));
         }
 
         public void Backward(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Back.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Back.GetCommand(DistanceCM));
         }
 
         public void Left(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Left.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Left.GetCommand(DistanceCM));
         }
 
         public void Right(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Right.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Right.GetCommand(DistanceCM));
         }
 
         public void Up(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Up.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Up.GetCommand(DistanceCM));
         }
 
         public void Down(int DistanceCM)
         {
-            ExecuteCommandAsync(TelloCommand.Down.GetCommand(DistanceCM));
+            ExecuteCommandSync(TelloCommand.Down.GetCommand(DistanceCM));
         }
 
         public void TurnLeft(int Degree)
         {
-            ExecuteCommandAsync(TelloCommand.RotateCounterClockwise.GetCommand(Degree));
+            ExecuteCommandSync(TelloCommand.RotateCounterClockwise.GetCommand(Degree));
         }
 
         public void TurnRight(int Degree)
         {
-            ExecuteCommandAsync(TelloCommand.RotateClockwise.GetCommand(Degree));
+            ExecuteCommandSync(TelloCommand.RotateClockwise.GetCommand(Degree));
         }
 
         public void Flip(FlipDirection Direction)
         {
-            ExecuteCommandAsync(TelloCommand.Flip.GetCommand(Direction));
+            ExecuteCommandSync(TelloCommand.Flip.GetCommand(Direction));
         }
 
         public void Go(int X, int Y, int Z, int Speed)
         {
-            ExecuteCommandAsync(TelloCommand.Go.GetCommand(X, Y, Z, Speed));
+            ExecuteCommandSync(TelloCommand.Go.GetCommand(X, Y, Z, Speed));
         }
 
         public void Curve(int X1, int Y1, int Z1, int X2, int Y2, int Z2, int Speed)
         {
-            ExecuteCommandAsync(TelloCommand.Curve.GetCommand(X1, Y1, Z1, X2, Y2, Z2, Speed));
+            ExecuteCommandSync(TelloCommand.Curve.GetCommand(X1, Y1, Z1, X2, Y2, Z2, Speed));
         }
 
         public void SetWifi(string SSID, string Password)
         {
-            ExecuteCommandAsync(TelloCommand.SetWifi.GetCommand(SSID, Password));
+            ExecuteCommandSync(TelloCommand.SetWifi.GetCommand(SSID, Password));
         }
 
         public void SetRadioControlChannels(int A, int B, int C, int D)
         {
-            ExecuteCommandAsync(TelloCommand.SetRadioControlChannels.GetCommand(A, B, C, D));
+            ExecuteCommandSync(TelloCommand.SetRadioControlChannels.GetCommand(A, B, C, D));
         }
 
         public void SetSpeed(int Speed)
         {
-            ExecuteCommandAsync(TelloCommand.SetSpeed.GetCommand(Speed));
+            ExecuteCommandSync(TelloCommand.SetSpeed.GetCommand(Speed));
         }
 
 

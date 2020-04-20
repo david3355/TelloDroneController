@@ -22,7 +22,15 @@
             <Label VerticalAlignment="Center">Battery:</Label>
             <TextBox Name="txt_battery" Foreground="White" FontWeight="Bold" Width="50" TextAlignment="Center" FontSize="15" VerticalAlignment="Center" Margin="5"></TextBox>
         </StackPanel>
-        <TextBox Name="txt_response" IsReadOnly="True" VerticalAlignment="Center" Height="30" DockPanel.Dock="Top"></TextBox>
+        <Grid Height="25" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Name="txt_command" Grid.Column="0" IsReadOnly="True" VerticalContentAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Green" ></TextBox>
+            <TextBox Name="txt_response" Grid.Column="1" IsReadOnly="True" VerticalContentAlignment="Center" VerticalAlignment="Center" ></TextBox>
+        </Grid>
         <Grid Height="Auto"  Background="#FFFFDEDE" DockPanel.Dock="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

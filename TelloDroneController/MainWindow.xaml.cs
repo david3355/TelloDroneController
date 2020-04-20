@@ -26,7 +26,7 @@ namespace TelloDroneController
             InitializeComponent();
             red = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
             green = new SolidColorBrush((Color)App.Current.TryFindResource("color_green"));
-            defaultIps = new List<string>() {"192.168.1.166", "192.168.10.1", "127.0.0.1" };
+            defaultIps = new List<string>() { "127.0.0.1", "192.168.1.166", "192.168.10.1"};
             list_ips.ItemsSource = defaultIps;
             txt_drone_ip.Text = defaultIps[0];
         }
@@ -56,7 +56,7 @@ namespace TelloDroneController
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
         {
             if (client == null) return;
-            int defaultDistance = 100;
+            int defaultDistance = 35;
             int defaultTurnDegree = 20;
             try
             {
@@ -161,6 +161,14 @@ namespace TelloDroneController
                 menu_curve_editor.IsEnabled = false;
             }));
         }
+        
+        public void CommandSent(string DroneCommand, bool Async)
+        {
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                txt_command.Text = String.Format("({0}) {1}", Async ? "A" : "S", DroneCommand);
+            }));
+        }
 
         private void btn_ip_list_Click(object sender, RoutedEventArgs e)
         {
@@ -177,5 +185,6 @@ namespace TelloDroneController
             txt_drone_ip.Visibility = Visibility.Visible;
             btn_ip_list.IsEnabled = true;
         }
+
     }
 }

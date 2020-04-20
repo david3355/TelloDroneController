@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UdpErrorCallback.cs" />
     <Compile Include="UdpResponseCallback.cs" />
     <Compile Include="UdpSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

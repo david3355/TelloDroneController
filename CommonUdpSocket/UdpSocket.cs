@@ -46,26 +46,19 @@ namespace CommonUdpSocket
             }, state);
         }
 
-        public void Receive(UdpResponseCallback ReadCallback, UdpErrorCallback ErrorCallback)
+        public void Receive(UdpResponseCallback ReadCallback)
         {
+            // Putting inner code in try catch results in receive error
             socket.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv = (asyncResult) =>
             {
-                try
-                {
-                    State so = (State)asyncResult.AsyncState;
-                    int bytes = socket.EndReceiveFrom(asyncResult, ref endpointSender);
-                    socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv, so);
-                    string data = Encoding.ASCII.GetString(so.buffer, 0, bytes);
-                    string senderHost = (endpointSender as IPEndPoint).Address.ToString();
-                    int senderPort = (endpointSender as IPEndPoint).Port;
-                    if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
-                }
-                catch (Exception e)
-                {
-                    if (ErrorCallback != null && e != null) ErrorCallback(e.Message); 
-                }
+                State so = (State)asyncResult.AsyncState;
+                int bytes = socket.EndReceiveFrom(asyncResult, ref endpointSender);
+                socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv, so);
+                string data = Encoding.ASCII.GetString(so.buffer, 0, bytes);
+                string senderHost = (endpointSender as IPEndPoint).Address.ToString();
+                int senderPort = (endpointSender as IPEndPoint).Port;
+                if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
             }, state);
-
         }
     }
 }
