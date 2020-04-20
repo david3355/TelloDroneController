@@ -61,6 +61,7 @@
     <Compile Include="CurveEditor.xaml.cs">
       <DependentUpon>CurveEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\AvailabilityChecker.cs" />
     <Compile Include="src\curve\Circle.cs" />
     <Compile Include="src\TelloCommander.cs" />
     <Compile Include="src\TelloClient.cs" />

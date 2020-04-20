@@ -26,7 +26,7 @@ namespace TelloDroneController
             InitializeComponent();
             red = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
             green = new SolidColorBrush((Color)App.Current.TryFindResource("color_green"));
-            defaultIps = new List<string>() { "127.0.0.1", "192.168.1.166", "192.168.10.1"};
+            defaultIps = new List<string>() { "127.0.0.1", "192.168.1.166", "192.168.10.1" };
             list_ips.ItemsSource = defaultIps;
             txt_drone_ip.Text = defaultIps[0];
         }
@@ -35,11 +35,17 @@ namespace TelloDroneController
         private SolidColorBrush red, green;
         private List<string> defaultIps;
 
-        private void Init()
+        private bool Init()
         {
             string ip = txt_drone_ip.Text;
-            if (client == null) client = new TelloClient(ip, this);
-            txt_current_speed.Content = client.CurrentSpeed;
+            if (AvailabilityChecker.IsAddressAvailable(ip))
+            {
+                if (client == null) client = new TelloClient(ip, this);
+                txt_current_speed.Content = client.CurrentSpeed;
+                return true;
+            }
+            MessageBox.Show(String.Format("Drone host is not available: {0}", ip));
+            return false;
         }
 
         private void window_drone_controller_KeyDown(object sender, KeyEventArgs e)
@@ -118,10 +124,12 @@ namespace TelloDroneController
 
         private void btn_start_Click(object sender, RoutedEventArgs e)
         {
-            Init();
-            client.Command();
-            btn_start.IsEnabled = false;
-            menu_curve_editor.IsEnabled = true;
+            if (Init())
+            {
+                client.Command();
+                btn_start.IsEnabled = false;
+                menu_curve_editor.IsEnabled = true;
+            }
         }
 
         private void menu_curve_editor_Click(object sender, RoutedEventArgs e)
@@ -161,7 +169,7 @@ namespace TelloDroneController
                 menu_curve_editor.IsEnabled = false;
             }));
         }
-        
+
         public void CommandSent(string DroneCommand, bool Async)
         {
             this.Dispatcher.Invoke(new Action(() =>

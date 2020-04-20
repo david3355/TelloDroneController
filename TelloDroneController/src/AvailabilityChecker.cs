@@ -11,12 +11,15 @@ namespace TelloDroneController.src
         public static bool IsAddressAvailable(string Address)
         {
             Ping ping = new Ping();
-            PingReply pingReply = ping.Send(Address);
-
-            if (pingReply.Status == IPStatus.Success)
+            try
             {
-                return true;
+                PingReply pingReply = ping.Send(Address);
+                if (pingReply.Status == IPStatus.Success)
+                {
+                    return true;
+                }
             }
+            catch { }
             return false;
         }
     }
