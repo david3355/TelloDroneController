@@ -10,7 +10,14 @@
         </Menu>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top">
             <Label VerticalAlignment="Center">Drone Host:</Label>
-            <TextBox Name="txt_drone_ip" Width="200" VerticalAlignment="Center">127.0.0.1</TextBox>
+            <TextBox Name="txt_drone_ip" Width="100" VerticalAlignment="Center" TextAlignment="Center">127.0.0.1</TextBox>
+            <ComboBox Name="list_ips" Width="100" Margin="0,5,0,5" Visibility="Collapsed"  VerticalAlignment="Center" SelectionChanged="list_ips_SelectionChanged">
+            </ComboBox>
+            <Button Name="btn_ip_list" Width="25" Height="25" Margin="3" Click="btn_ip_list_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="img/list.png"></ImageBrush>
+                </Button.Background>
+            </Button>
             <Button Name="btn_start" Width="100" Margin="3" VerticalAlignment="Center" Click="btn_start_Click">START</Button>
             <Label VerticalAlignment="Center">Battery:</Label>
             <TextBox Name="txt_battery" Foreground="White" FontWeight="Bold" Width="50" TextAlignment="Center" FontSize="15" VerticalAlignment="Center" Margin="5"></TextBox>

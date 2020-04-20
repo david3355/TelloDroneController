@@ -60,9 +60,9 @@ namespace CommonUdpSocket
                     int senderPort = (endpointSender as IPEndPoint).Port;
                     if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
                 }
-                catch (SocketException se)
+                catch (Exception e)
                 {
-                    if (ErrorCallback != null && se != null) ErrorCallback(se.Message); 
+                    if (ErrorCallback != null && e != null) ErrorCallback(e.Message); 
                 }
             }, state);
 

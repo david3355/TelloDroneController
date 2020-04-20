@@ -26,12 +26,14 @@ namespace TelloDroneController
             InitializeComponent();
             red = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
             green = new SolidColorBrush((Color)App.Current.TryFindResource("color_green"));
+            defaultIps = new List<string>() {"192.168.1.166", "192.168.10.1", "127.0.0.1" };
+            list_ips.ItemsSource = defaultIps;
+            txt_drone_ip.Text = defaultIps[0];
         }
 
         private TelloClient client;
-        private const string DRONE_SIMULATOR_IP = "127.0.0.1";
-        private const string DRONE_IP = "192.168.10.1";
         private SolidColorBrush red, green;
+        private List<string> defaultIps;
 
         private void Init()
         {
@@ -54,7 +56,7 @@ namespace TelloDroneController
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
         {
             if (client == null) return;
-            int defaultDistance = 50;
+            int defaultDistance = 100;
             int defaultTurnDegree = 20;
             try
             {
@@ -98,17 +100,6 @@ namespace TelloDroneController
         {
             if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
             else ActionImage.Visibility = Visibility.Visible;
-        }
-
-        private void SendCommandAsync(string DroneCommand)
-        {
-            Thread sender = new Thread(SendFunction);
-            sender.Start();
-        }
-
-        public void SendFunction()
-        {
-
         }
 
         private void SetBattery(int Value)
@@ -169,6 +160,22 @@ namespace TelloDroneController
                 btn_start.IsEnabled = true;
                 menu_curve_editor.IsEnabled = false;
             }));
+        }
+
+        private void btn_ip_list_Click(object sender, RoutedEventArgs e)
+        {
+            list_ips.Visibility = Visibility.Visible;
+            txt_drone_ip.Visibility = Visibility.Collapsed;
+            btn_ip_list.IsEnabled = false;
+            list_ips.IsDropDownOpen = true;
+        }
+
+        private void list_ips_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txt_drone_ip.Text = defaultIps[list_ips.SelectedIndex];
+            list_ips.Visibility = Visibility.Collapsed;
+            txt_drone_ip.Visibility = Visibility.Visible;
+            btn_ip_list.IsEnabled = true;
         }
     }
 }

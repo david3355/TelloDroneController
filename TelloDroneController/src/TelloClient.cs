@@ -136,7 +136,6 @@ namespace TelloDroneController.src
                     }
                 }
             }
-
             //if (receiveEvent != null)
             //{
             //    string lastCommand = String.Empty;
