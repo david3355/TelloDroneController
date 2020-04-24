@@ -260,10 +260,10 @@ namespace TelloDroneController.src
             }
         }
 
-        public class SetRadioControlChannels
+        public class RemoteControl
         {
             /// <summary>
-            /// Set radio control channels
+            /// Set radio control via four channels
             /// </summary>
             /// <param name="A">left/right</param>
             /// <param name="B">forward/backward</param>

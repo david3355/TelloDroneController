@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="src\AvailabilityChecker.cs" />
     <Compile Include="src\curve\Circle.cs" />
+    <Compile Include="src\Joystick.cs" />
     <Compile Include="src\TelloCommander.cs" />
     <Compile Include="src\TelloClient.cs" />
     <Compile Include="src\TelloEvents.cs" />
@@ -159,6 +160,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\joystick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\joystick_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\start_rotor.png" />
+    <Resource Include="img\start_rotor_gray.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

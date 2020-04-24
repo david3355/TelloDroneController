@@ -249,9 +249,14 @@ namespace TelloDroneController.src
             ExecuteCommandSync(TelloCommand.SetWifi.GetCommand(SSID, Password));
         }
 
-        public void SetRadioControlChannels(int A, int B, int C, int D)
+        public void RemoteControl(int LeftRight, int ForwardBackward, int UpDown, int Yaw)
         {
-            ExecuteCommandSync(TelloCommand.SetRadioControlChannels.GetCommand(A, B, C, D));
+            ExecuteCommandAsync(TelloCommand.RemoteControl.GetCommand(LeftRight, ForwardBackward, UpDown, Yaw));
+        }
+
+        public void StartRotors()
+        {
+            RemoteControl(-100, -100, -100, 100);
         }
 
         public void SetSpeed(int Speed)
