@@ -38,6 +38,7 @@ namespace DroneSimulator
         private static int STATUS_PORT = 8890;
         private static Timer timer = new Timer(1000);
         private static Random rnd = new Random();
+        private const int COMMAND_RESPONSE_DELAY_MS = 500;
 
         private static void ProcessMessageFromClient(string SenderHostAddress, int SenderPort, string Message)
         {
@@ -51,7 +52,7 @@ namespace DroneSimulator
                 statusReporter.Client(SenderHostAddress, STATUS_PORT);
                 timer.Start();
             }
-            ResponseDelay(2000);
+            ResponseDelay(COMMAND_RESPONSE_DELAY_MS);
             server.Send("ok");
             Console.WriteLine("Processing from [{1}:{2}]: {0}", Message, SenderHostAddress, SenderPort);
         }

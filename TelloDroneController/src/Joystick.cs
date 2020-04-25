@@ -31,8 +31,8 @@ namespace TelloDroneController.src
         private const int minXPos = -DEFAULT_BOUNDARY;
         private const int minYPos = -DEFAULT_BOUNDARY;
 
-        private const int USER_MOVE_UNIT = 6;
-        private const int ADJUST_MOVE_UNIT = 1;
+        private const int ADJUST_MOVE_UNIT_KEYDOWN = 0;
+        private const int ADJUST_MOVE_UNIT_NO_KEYDOWN = 10;
 
         private double originalXPos, originalYPos;
         private double imgWidth, imgHeight;
@@ -49,35 +49,49 @@ namespace TelloDroneController.src
 
         public void PullUp()
         {
-            if (yPos + USER_MOVE_UNIT <= maxYPos) yPos += USER_MOVE_UNIT;
+            yPos += GetMoveUnit(yPos, 1);
             AdjustImage();
         }
 
         public void PullDown()
         {
-            if (yPos - USER_MOVE_UNIT >= minYPos) yPos -= USER_MOVE_UNIT;
+            yPos += GetMoveUnit(yPos, -1);
             AdjustImage();
         }
 
         public void PullRight()
         {
-            if (xPos + USER_MOVE_UNIT <= maxXPos) xPos += USER_MOVE_UNIT;
+            xPos += GetMoveUnit(xPos, 1);
             AdjustImage();
         }
 
         public void PullLeft()
         {
-            if (xPos - USER_MOVE_UNIT >= minXPos) xPos -= USER_MOVE_UNIT;
+            xPos += GetMoveUnit(xPos, -1);
             AdjustImage();
         }
 
-        public void AutoAdjust()
+        private int GetMoveUnit(int ActualPos, int Direction)
         {
-            if (xPos > 0 && xPos - ADJUST_MOVE_UNIT >= 0) xPos -= ADJUST_MOVE_UNIT;
-            if (xPos < 0 && xPos + ADJUST_MOVE_UNIT <= 0) xPos += ADJUST_MOVE_UNIT;
+            int max = (int)Math.Round(Math.Sqrt(DEFAULT_BOUNDARY), 0);
+            int square = (int)Math.Sqrt(Math.Abs(ActualPos));
+            int moveUnit = max - square;
+            if (Math.Abs(ActualPos) + moveUnit > DEFAULT_BOUNDARY) moveUnit = DEFAULT_BOUNDARY - Math.Abs(ActualPos);
+            return Direction * moveUnit;
+        }
 
-            if (yPos > 0 && yPos - ADJUST_MOVE_UNIT >= 0) yPos -= ADJUST_MOVE_UNIT;
-            if (yPos < 0 && yPos + ADJUST_MOVE_UNIT <= 0) yPos += ADJUST_MOVE_UNIT;
+        private int GetAutoAdjustUnit(bool IsAnyControllerKeyDown, int ActualPos)
+        {
+            int adjustment = ADJUST_MOVE_UNIT_NO_KEYDOWN;
+            if (IsAnyControllerKeyDown) adjustment = ADJUST_MOVE_UNIT_KEYDOWN;
+            if (Math.Abs(ActualPos) - adjustment < 0) adjustment = Math.Abs(ActualPos);
+            return ActualPos > 0 ? -adjustment : adjustment;
+        }
+
+        public void AutoAdjust(bool IsAnyControllerKeyDown)
+        {
+            xPos += GetAutoAdjustUnit(IsAnyControllerKeyDown, xPos);
+            yPos += GetAutoAdjustUnit(IsAnyControllerKeyDown, yPos);
             AdjustImage();
         }
 

@@ -28,7 +28,7 @@ namespace TelloDroneController
             leftJoystick = new Joystick(img_left_joystick, left_joystick_panel);
             rightJoystick = new Joystick(img_right_joystick, right_joystick_panel);
             joystickAdjuster = new DispatcherTimer();
-            joystickAdjuster.Interval = new TimeSpan(20000);
+            joystickAdjuster.Interval = new TimeSpan(10000);
             joystickAdjuster.Tick += joystickAdjuster_Tick;
             joystickAdjuster.Start();
             red = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
@@ -41,12 +41,6 @@ namespace TelloDroneController
             joystickDataSender.Tick += JoystickControl;
             joystickDataSender.Interval = new TimeSpan(0, 0, 0, 0, 1000);
             SetJoystickMode();
-        }
-
-        void joystickAdjuster_Tick(object sender, EventArgs e)
-        {
-            leftJoystick.AutoAdjust();
-            rightJoystick.AutoAdjust();
         }
 
         private TelloClient client;
@@ -68,6 +62,25 @@ namespace TelloDroneController
             }
             MessageBox.Show(String.Format("Drone host is not available: {0}", ip));
             return false;
+        }
+
+        void joystickAdjuster_Tick(object sender, EventArgs e)
+        {
+            bool isAnyKeyDown = ControllerKeysDown().Any();
+            leftJoystick.AutoAdjust(isAnyKeyDown);
+            rightJoystick.AutoAdjust(isAnyKeyDown);
+            
+            AdjustJoystick();
+        }
+
+        public static IEnumerable<Key> ControllerKeysDown()
+        {
+            Key[] controllerKeys = {Key.W, Key.A, Key.S, Key.D, Key.Up, Key.Left, Key.Down, Key.Right };
+            foreach (Key key in controllerKeys)
+            {
+                if (Keyboard.IsKeyDown(key))
+                    yield return key;
+            }
         }
 
         private void window_drone_controller_KeyDown(object sender, KeyEventArgs e)
@@ -106,8 +119,7 @@ namespace TelloDroneController
             int defaultDistance = 35;
             int defaultTurnDegree = 20;
 
-            AdjustJoystick();
-            if (joystickMode && !joystickDataSender.IsEnabled && (e.Key == Key.Up || e.Key == Key.Enter)) joystickDataSender.Start();
+            if (joystickMode && !joystickDataSender.IsEnabled && (e.Key == Key.Up)) joystickDataSender.Start();
 
             try
             {
