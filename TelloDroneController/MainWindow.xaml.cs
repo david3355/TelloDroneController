@@ -39,7 +39,7 @@ namespace TelloDroneController
 
             joystickDataSender = new DispatcherTimer();
             joystickDataSender.Tick += JoystickControl;
-            joystickDataSender.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+            joystickDataSender.Interval = new TimeSpan(0, 0, 0, 0, 500);
             SetJoystickMode();
         }
 
@@ -134,7 +134,7 @@ namespace TelloDroneController
                     case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray); if (KeyDown && !joystickMode) client.TurnLeft(defaultTurnDegree); break;
                     case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray); if (KeyDown && !joystickMode) client.TurnRight(defaultTurnDegree); break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray); if (KeyDown) client.Land(); joystickDataSender.Stop(); break;
-                    case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) client.Emergency(); break;
+                    case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) Emergency(); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray); if (KeyDown) client.TakeOff(); break;
                     case Key.LeftCtrl: HandleKeyEvent(KeyDown, img_start_rotors_gray); if (KeyDown) client.StartRotors(); break;
 
@@ -164,6 +164,13 @@ namespace TelloDroneController
         {
             if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
             else ActionImage.Visibility = Visibility.Visible;
+        }
+
+        private void Emergency()
+        {
+            // TODO Check emergency situations
+            client.Emergency(); 
+            joystickDataSender.Stop(); 
         }
 
         private void SetBattery(int Value)
