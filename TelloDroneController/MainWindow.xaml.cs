@@ -66,10 +66,9 @@ namespace TelloDroneController
 
         void joystickAdjuster_Tick(object sender, EventArgs e)
         {
-            bool isAnyKeyDown = ControllerKeysDown().Any();
-            leftJoystick.AutoAdjust(isAnyKeyDown);
-            rightJoystick.AutoAdjust(isAnyKeyDown);
-            
+            var controllerKeysDown = ControllerKeysDown();
+            leftJoystick.AutoAdjust(controllerKeysDown.Contains(Key.A) || controllerKeysDown.Contains(Key.D), controllerKeysDown.Contains(Key.W) || controllerKeysDown.Contains(Key.S));
+            rightJoystick.AutoAdjust(controllerKeysDown.Contains(Key.Left) || controllerKeysDown.Contains(Key.Right), controllerKeysDown.Contains(Key.Up) || controllerKeysDown.Contains(Key.Down));
             AdjustJoystick();
         }
 

@@ -37,6 +37,8 @@ namespace TelloDroneController.src
         private double originalXPos, originalYPos;
         private double imgWidth, imgHeight;
 
+        private enum Axis { X, Y }
+
         public int XPosition
         {
             get { return xPos; }
@@ -80,18 +82,18 @@ namespace TelloDroneController.src
             return Direction * moveUnit;
         }
 
-        private int GetAutoAdjustUnit(bool IsAnyControllerKeyDown, int ActualPos)
+        private int GetAutoAdjustUnit(bool IsXControllerKeyDown, bool IsYControllerKeyDown, int ActualPos, Axis Axis)
         {
             int adjustment = ADJUST_MOVE_UNIT_NO_KEYDOWN;
-            if (IsAnyControllerKeyDown) adjustment = ADJUST_MOVE_UNIT_KEYDOWN;
+            if ((IsXControllerKeyDown && Axis == Axis.X) || (IsYControllerKeyDown && Axis == Axis.Y)) adjustment = ADJUST_MOVE_UNIT_KEYDOWN;
             if (Math.Abs(ActualPos) - adjustment < 0) adjustment = Math.Abs(ActualPos);
             return ActualPos > 0 ? -adjustment : adjustment;
         }
 
-        public void AutoAdjust(bool IsAnyControllerKeyDown)
+        public void AutoAdjust(bool IsXControllerKeyDown, bool IsYControllerKeyDown)
         {
-            xPos += GetAutoAdjustUnit(IsAnyControllerKeyDown, xPos);
-            yPos += GetAutoAdjustUnit(IsAnyControllerKeyDown, yPos);
+            xPos += GetAutoAdjustUnit(IsXControllerKeyDown, IsYControllerKeyDown, xPos, Axis.X);
+            yPos += GetAutoAdjustUnit(IsXControllerKeyDown, IsYControllerKeyDown, yPos, Axis.Y);
             AdjustImage();
         }
 
