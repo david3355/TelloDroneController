@@ -22,6 +22,7 @@ namespace TelloDroneController.src
             commanderSender.Receive(ProcessCommandResponse);
             commanderSender.Client(DroneIp, 8889);
             speed = DEFAULT_SPEED;
+            stream_on = false;
         }
 
         private UDPSocket commanderSender;
@@ -33,6 +34,7 @@ namespace TelloDroneController.src
         private int speed;
         private const int DEFAULT_SPEED = 30;
         private const int RESPONSE_TIMEOUT_MS = 5000;
+        private bool stream_on;
 
         class DroneResponse
         {
@@ -51,6 +53,11 @@ namespace TelloDroneController.src
         public int CurrentSpeed
         {
             get { return speed; }
+        }
+
+        public bool IsStreamOn
+        {
+            get { return stream_on; }
         }
 
         public bool IncreaseSpeed(int By = 5)
@@ -182,11 +189,13 @@ namespace TelloDroneController.src
         public void StreamOn()
         {
             ExecuteCommandSync(TelloCommand.StreamOn.GetCommand());
+            stream_on = true;
         }
 
         public void StreamOff()
         {
             ExecuteCommandSync(TelloCommand.StreamOff.GetCommand());
+            stream_on = false;
         }
 
         public void Forward(int DistanceCM)

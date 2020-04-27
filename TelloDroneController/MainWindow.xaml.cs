@@ -139,6 +139,7 @@ namespace TelloDroneController
 
                     case Key.Q: HandleKeyEvent(KeyDown, img_dec_speed_gray); if (KeyDown) client.DecreaseSpeed(); break;
                     case Key.E: HandleKeyEvent(KeyDown, img_inc_speed_gray); if (KeyDown) client.IncreaseSpeed(); break;
+                    case Key.P: SwitchStream(KeyDown); break;
                 }
             }
             catch (CommandIntegerParamException ie)
@@ -157,6 +158,23 @@ namespace TelloDroneController
                 txt_response.Background = red;
             }
             txt_current_speed.Content = client.CurrentSpeed;
+        }
+
+        private void SwitchStream(bool KeyDown)
+        {
+            if (client != null && KeyDown)
+            {
+                if (client.IsStreamOn)
+                {
+                    client.StreamOff();
+                    img_stream_gray.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    client.StreamOn();
+                    img_stream_gray.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         private void HandleKeyEvent(bool KeyDown, Image ActionImage, string DroneCommand = null)

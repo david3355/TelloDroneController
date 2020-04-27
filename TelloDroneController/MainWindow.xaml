@@ -62,6 +62,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Image Name="img_start_rotors" Grid.Column="0" Source="img/start_rotor.png" Margin="5" />
             <Image Name="img_start_rotors_gray" Grid.Column="0" Source="img/start_rotor_gray.png" Margin="5" ToolTip="Start rotors (Left Control)" />
@@ -74,6 +75,9 @@
 
             <Image Name="img_emergency" Grid.Column="3" Source="img/emergency.png" Margin="5" />
             <Image Name="img_emergency_gray" Grid.Column="3" Source="img/emergency_gray.png" Margin="5" ToolTip="Emergency (Escape)"/>
+
+            <Image Name="img_stream" Grid.Column="4" Source="img/camera.png" Margin="5" ToolTip="Stream is ON (P)" />
+            <Image Name="img_stream_gray" Grid.Column="4" Source="img/camera_gray.png" Margin="5" ToolTip="Stream is OFF (P)"/>
         </Grid>
         <Grid Name="control_panel" DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
