@@ -55,9 +55,13 @@ namespace CommonUdpSocket
                 int bytes = socket.EndReceiveFrom(asyncResult, ref endpointSender);
                 socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref endpointSender, recv, so);
                 string data = Encoding.ASCII.GetString(so.buffer, 0, bytes);
-                string senderHost = (endpointSender as IPEndPoint).Address.ToString();
-                int senderPort = (endpointSender as IPEndPoint).Port;
-                if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
+                IPEndPoint sender = (endpointSender as IPEndPoint);
+                if (sender != null)
+                {
+                    string senderHost = sender.Address.ToString();
+                    int senderPort = sender.Port;
+                    if (ReadCallback != null) ReadCallback(senderHost, senderPort, data);
+                }
             }, state);
         }
     }

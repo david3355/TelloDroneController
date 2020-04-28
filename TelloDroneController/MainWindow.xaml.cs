@@ -101,15 +101,16 @@ namespace TelloDroneController
         private void AdjustJoystick()
         {
             if (!joystickMode) return;
+            bool shiftDown = Keyboard.IsKeyDown(Key.LeftShift);
 
             if (Keyboard.IsKeyDown(Key.W)) leftJoystick.PullUp();
             if (Keyboard.IsKeyDown(Key.S)) leftJoystick.PullDown();
             if (Keyboard.IsKeyDown(Key.A)) leftJoystick.PullLeft();
             if (Keyboard.IsKeyDown(Key.D)) leftJoystick.PullRight();
-            if (Keyboard.IsKeyDown(Key.Up)) rightJoystick.PullUp();
-            if (Keyboard.IsKeyDown(Key.Down)) rightJoystick.PullDown();
-            if (Keyboard.IsKeyDown(Key.Left)) rightJoystick.PullLeft();
-            if (Keyboard.IsKeyDown(Key.Right)) rightJoystick.PullRight();
+            if (Keyboard.IsKeyDown(Key.Up) && !shiftDown) rightJoystick.PullUp();
+            if (Keyboard.IsKeyDown(Key.Down) && !shiftDown) rightJoystick.PullDown();
+            if (Keyboard.IsKeyDown(Key.Left) && !shiftDown) rightJoystick.PullLeft();
+            if (Keyboard.IsKeyDown(Key.Right) && !shiftDown) rightJoystick.PullRight();
         }
 
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
@@ -118,7 +119,11 @@ namespace TelloDroneController
             int defaultDistance = 35;
             int defaultTurnDegree = 20;
 
-            if (joystickMode && !joystickDataSender.IsEnabled && (e.Key == Key.Up)) joystickDataSender.Start();
+            bool shiftDown = Keyboard.IsKeyDown(Key.LeftShift);
+
+            if (joystickMode && !joystickDataSender.IsEnabled && e.Key == Key.Up && !shiftDown) joystickDataSender.Start();
+
+            FlipShift(shiftDown);
 
             try
             {
@@ -128,10 +133,26 @@ namespace TelloDroneController
                     case Key.S: HandleKeyEvent(KeyDown, img_backward_gray); if (KeyDown && !joystickMode) client.Backward(defaultDistance); break;
                     case Key.A: HandleKeyEvent(KeyDown, img_left_gray); if (KeyDown && !joystickMode) client.Left(defaultDistance); break;
                     case Key.D: HandleKeyEvent(KeyDown, img_right_gray); if (KeyDown && !joystickMode) client.Right(defaultDistance); break;
-                    case Key.Up: HandleKeyEvent(KeyDown, img_up_gray); if (KeyDown && !joystickMode) client.Up(defaultDistance); break;
-                    case Key.Down: HandleKeyEvent(KeyDown, img_down_gray); if (KeyDown && !joystickMode) client.Down(defaultDistance); break;
-                    case Key.Left: HandleKeyEvent(KeyDown, img_ccw_gray); if (KeyDown && !joystickMode) client.TurnLeft(defaultTurnDegree); break;
-                    case Key.Right: HandleKeyEvent(KeyDown, img_cw_gray); if (KeyDown && !joystickMode) client.TurnRight(defaultTurnDegree); break;
+                    case Key.Up:
+                        HandleKeyEvent(KeyDown, img_up_gray, shiftDown, img_flip_forward);
+                        if (KeyDown && !joystickMode && !shiftDown) client.Up(defaultDistance);
+                        if (KeyDown && shiftDown) client.Flip(FlipDirection.FORWARD);
+                        break;
+                    case Key.Down: 
+                        HandleKeyEvent(KeyDown, img_down_gray, shiftDown, img_flip_backward); 
+                        if (KeyDown && !joystickMode && !shiftDown) client.Down(defaultDistance);
+                        if (KeyDown && shiftDown) client.Flip(FlipDirection.BACKWARD);
+                        break;
+                    case Key.Left: 
+                        HandleKeyEvent(KeyDown, img_ccw_gray, shiftDown, img_flip_left); 
+                        if (KeyDown && !joystickMode && !shiftDown) client.TurnLeft(defaultTurnDegree);
+                        if (KeyDown && shiftDown) client.Flip(FlipDirection.LEFT);
+                        break;
+                    case Key.Right:
+                        HandleKeyEvent(KeyDown, img_cw_gray, shiftDown, img_flip_right); 
+                        if (KeyDown && !joystickMode && !shiftDown) client.TurnRight(defaultTurnDegree);
+                        if (KeyDown && shiftDown) client.Flip(FlipDirection.RIGHT);
+                        break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray); if (KeyDown) client.Land(); joystickDataSender.Stop(); break;
                     case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) Emergency(); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray); if (KeyDown) client.TakeOff(); break;
@@ -160,6 +181,42 @@ namespace TelloDroneController
             txt_current_speed.Content = client.CurrentSpeed;
         }
 
+        private void FlipShift(bool ShiftKeyDown)
+        {
+            if (ShiftKeyDown)
+            {
+                img_flip_forward.Visibility = Visibility.Visible;
+                img_flip_backward.Visibility = Visibility.Visible;
+                img_flip_left.Visibility = Visibility.Visible;
+                img_flip_right.Visibility = Visibility.Visible;
+
+                img_up.Visibility = Visibility.Collapsed;
+                img_down.Visibility = Visibility.Collapsed;
+                img_cw.Visibility = Visibility.Collapsed;
+                img_ccw.Visibility = Visibility.Collapsed;
+                img_up_gray.Visibility = Visibility.Collapsed;
+                img_down_gray.Visibility = Visibility.Collapsed;
+                img_cw_gray.Visibility = Visibility.Collapsed;
+                img_ccw_gray.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                img_flip_forward.Visibility = Visibility.Collapsed;
+                img_flip_backward.Visibility = Visibility.Collapsed;
+                img_flip_left.Visibility = Visibility.Collapsed;
+                img_flip_right.Visibility = Visibility.Collapsed;
+
+                img_up.Visibility = Visibility.Visible;
+                img_down.Visibility = Visibility.Visible;
+                img_cw.Visibility = Visibility.Visible;
+                img_ccw.Visibility = Visibility.Visible;
+                img_up_gray.Visibility = Visibility.Visible;
+                img_down_gray.Visibility = Visibility.Visible;
+                img_cw_gray.Visibility = Visibility.Visible;
+                img_ccw_gray.Visibility = Visibility.Visible;
+            }
+        }
+
         private void SwitchStream(bool KeyDown)
         {
             if (client != null && KeyDown)
@@ -177,10 +234,21 @@ namespace TelloDroneController
             }
         }
 
-        private void HandleKeyEvent(bool KeyDown, Image ActionImage, string DroneCommand = null)
+        private void HandleKeyEvent(bool KeyDown, Image ActionImage, bool ShiftDown = false, Image ShiftActionImage = null)
         {
-            if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
-            else ActionImage.Visibility = Visibility.Visible;
+            if (ShiftDown)
+            {
+                if (ShiftActionImage != null)
+                {
+                    if (KeyDown) ShiftActionImage.Margin = new Thickness(0);
+                    else ShiftActionImage.Margin = new Thickness(5);
+                }
+            }
+            else
+            {
+                if (KeyDown) ActionImage.Visibility = Visibility.Hidden;
+                else ActionImage.Visibility = Visibility.Visible;
+            }
         }
 
         private void Emergency()
