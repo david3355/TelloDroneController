@@ -61,8 +61,12 @@
     <Compile Include="CurveEditor.xaml.cs">
       <DependentUpon>CurveEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Queries.xaml.cs">
+      <DependentUpon>Queries.xaml</DependentUpon>
+    </Compile>
     <Compile Include="src\AvailabilityChecker.cs" />
     <Compile Include="src\curve\Circle.cs" />
+    <Compile Include="src\DroneStatus.cs" />
     <Compile Include="src\Joystick.cs" />
     <Compile Include="src\TelloCommander.cs" />
     <Compile Include="src\TelloClient.cs" />
@@ -83,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Queries.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="res\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

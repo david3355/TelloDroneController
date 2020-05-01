@@ -1,0 +1,12 @@
+﻿<Window x:Class="TelloDroneController.Queries"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Queries" Height="200" Width="250" Icon="img/controller.png">
+    <Grid>
+        <StackPanel>
+            <ComboBox Name="list_queries" Margin="20"></ComboBox>
+            <Button Name="btn_query" Width="130" Click="btn_query_Click">Query</Button>
+            <TextBox Name="txt_query_result" HorizontalContentAlignment="Center" Margin="20"></TextBox>
+        </StackPanel>
+    </Grid>
+</Window>

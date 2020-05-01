@@ -7,6 +7,9 @@
             <MenuItem Header="Edit">
                 <MenuItem Name="menu_curve_editor" IsEnabled="False" Header="Curve editor" Click="menu_curve_editor_Click"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Command">
+                <MenuItem Name="menu_query" IsEnabled="False" Header="Queries" Click="menu_query_Click"></MenuItem>
+            </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Top">
             <Label VerticalAlignment="Center">Drone Host:</Label>
@@ -66,7 +69,7 @@
             </Grid.ColumnDefinitions>
             <Image Name="img_start_rotors" Grid.Column="0" Source="img/start_rotor.png" Margin="5" />
             <Image Name="img_start_rotors_gray" Grid.Column="0" Source="img/start_rotor_gray.png" Margin="5" ToolTip="Start rotors (Left Control)" />
-            
+
             <Image Name="img_takeoff" Grid.Column="1" Source="img/takeoff.png" Margin="5" />
             <Image Name="img_takeoff_gray" Grid.Column="1" Source="img/takeoff_gray.png" Margin="5" ToolTip="Take off (Enter)" />
 
@@ -167,6 +170,16 @@
                 <Label Name="txt_current_speed" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"></Label>
                 <Label VerticalAlignment="Center">cm/s</Label>
             </StackPanel>
+
+            <Grid Name="emergency_notification" Grid.ColumnSpan="2" Margin="10" Background="Red" Visibility="Collapsed" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox Name="txt_emergency" Grid.Row="0" Background="Transparent"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="50">STOP ALL MOTORS</TextBox>
+                <TextBox Name="txt_emergency_info" Grid.Row="1" Background="Transparent"  TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="30">
+                </TextBox>
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

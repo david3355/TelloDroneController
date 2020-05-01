@@ -36,6 +36,7 @@ namespace TelloDroneController
             defaultIps = new List<string>() { "127.0.0.1", "192.168.1.166", "192.168.10.1" };
             list_ips.ItemsSource = defaultIps;
             txt_drone_ip.Text = defaultIps[0];
+            status = new DroneStatus();
 
             joystickDataSender = new DispatcherTimer();
             joystickDataSender.Tick += JoystickControl;
@@ -50,6 +51,8 @@ namespace TelloDroneController
         private Joystick leftJoystick, rightJoystick;
         private bool joystickMode;
         private DispatcherTimer joystickDataSender;
+        private int escapeTimes = 0;
+        private DroneStatus status;
 
         private bool Init()
         {
@@ -125,6 +128,12 @@ namespace TelloDroneController
 
             FlipShift(shiftDown);
 
+            if (KeyDown && e.Key != Key.Escape)
+            {
+                escapeTimes = 0;
+                emergency_notification.Visibility = Visibility.Collapsed;
+            }
+
             try
             {
                 switch (e.Key)
@@ -154,7 +163,7 @@ namespace TelloDroneController
                         if (KeyDown && shiftDown) client.Flip(FlipDirection.RIGHT);
                         break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray); if (KeyDown) client.Land(); joystickDataSender.Stop(); break;
-                    case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) Emergency(); break;
+                    case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) HandleEmergency(); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray); if (KeyDown) client.TakeOff(); break;
                     case Key.LeftCtrl: HandleKeyEvent(KeyDown, img_start_rotors_gray); if (KeyDown) client.StartRotors(); break;
 
@@ -251,11 +260,41 @@ namespace TelloDroneController
             }
         }
 
+        private void HandleEmergency()
+        {
+            emergency_notification.Visibility = Visibility.Visible;
+            if (escapeTimes == 0) txt_emergency_info.Text = "Press Escape again to stop all motors!";
+            else if (escapeTimes == 1 && status.HeightCM > 100) txt_emergency_info.Text = "Drone is higher than 1 meter! Press Escape again to stop all motors!";
+            else emergency_notification.Visibility = Visibility.Collapsed;
+
+            if (status.HeightCM < 100 && escapeTimes > 0) Emergency();
+            else if (escapeTimes > 1) Emergency();
+            escapeTimes++;
+        }
+
+        private void LockJoystick()
+        {
+            if (joystickMode)
+            {
+                leftJoystick.LockStillPosition();
+                rightJoystick.LockStillPosition();
+            }
+        }
+
+        private void UnlockJoystick()
+        {
+            if (joystickMode)
+            {
+                leftJoystick.Unlock();
+                rightJoystick.Unlock();
+            }
+        }
+
         private void Emergency()
         {
-            // TODO Check emergency situations
-            client.Emergency(); 
-            joystickDataSender.Stop(); 
+            LockJoystick();
+            client.MakeDroneStill();
+            client.Emergency();
         }
 
         private void SetBattery(int Value)
@@ -283,6 +322,7 @@ namespace TelloDroneController
                 btn_ip_list.IsEnabled = false;
                 check_joystick_mode.IsEnabled = false;
                 menu_curve_editor.IsEnabled = true;
+                menu_query.IsEnabled = true;
             }
         }
 
@@ -294,9 +334,15 @@ namespace TelloDroneController
 
         public void ReceiveTelloResponse(string SenderHostAddress, int SenderPort, string LastCommand, string Response)
         {
+            if (LastCommand == TelloCommand.Emergency.GetCommand() && Response == DroneResponse.OK)
+            {
+                joystickDataSender.Stop();
+                UnlockJoystick();
+            }
+
             this.Dispatcher.Invoke(new Action(() =>
             {
-                if (Response == "ok") txt_response.Background = green;
+                if (Response == DroneResponse.OK) txt_response.Background = green;
                 else txt_response.Background = red;
                 txt_response.Text = String.Format("Processing response of [{1}] command: {0}", Response, LastCommand);
             }));
@@ -306,10 +352,11 @@ namespace TelloDroneController
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                SetBattery(int.Parse(StatusValues["bat"]));
-                status_height.Content = Math.Round(int.Parse(StatusValues["h"]) / 100.0, 2);
-                status_speed.Content = StatusValues["vgx"];
-                status_htemp.Content = StatusValues["temph"];
+                status.Parse(StatusValues);
+                SetBattery(status.Battery);
+                status_height.Content = Math.Round(status.HeightCM / 100.0, 2);
+                status_speed.Content = status.SpeedX;
+                status_htemp.Content = status.HighestTemperature;
             }));
         }
 
@@ -373,6 +420,12 @@ namespace TelloDroneController
         {
             joystickMode = check_joystick_mode.IsChecked.Value;
             SetJoystickMode();
+        }
+
+        private void menu_query_Click(object sender, RoutedEventArgs e)
+        {
+            Queries queries = new Queries(client);
+            queries.Show();
         }
     }
 }

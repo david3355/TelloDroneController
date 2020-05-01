@@ -5,15 +5,15 @@ using System.Text;
 
 namespace TelloDroneController.src
 {
-    public abstract class DroneException: Exception 
+    public abstract class DroneException : Exception
     {
-        public DroneException(string Message): base(Message) {}
+        public DroneException(string Message) : base(Message) { }
     }
 
     public class CommandIntegerParamException : DroneException
     {
-        public CommandIntegerParamException(string BaseCommand, string ParameterName, int ParameterValue, int LowerBoundary, int UpperBoundary) : 
-            base(String.Format("{0} command error. Value of {1} is incorrect: {2}. Valid range: ({3} - {4})", BaseCommand, ParameterName, ParameterValue, LowerBoundary, UpperBoundary)) 
+        public CommandIntegerParamException(string BaseCommand, string ParameterName, int ParameterValue, int LowerBoundary, int UpperBoundary) :
+            base(String.Format("{0} command error. Value of {1} is incorrect: {2}. Valid range: ({3} - {4})", BaseCommand, ParameterName, ParameterValue, LowerBoundary, UpperBoundary))
         {
             this.baseCommand = BaseCommand;
             this.parameterName = ParameterName;
@@ -58,7 +58,7 @@ namespace TelloDroneController.src
     public class CommandStringParamException : DroneException
     {
         public CommandStringParamException(string BaseCommand, string ParameterName, string ParameterValue) :
-            base(String.Format("{0} command error. Value of {1} cannot be empty!", BaseCommand, ParameterName, ParameterValue)) 
+            base(String.Format("{0} command error. Value of {1} cannot be empty!", BaseCommand, ParameterName, ParameterValue))
         {
             this.baseCommand = BaseCommand;
             this.parameterName = ParameterName;
@@ -84,6 +84,10 @@ namespace TelloDroneController.src
         }
     }
 
+    public class DroneResponse
+    {
+        public const string OK = "ok";
+    }
 
     public enum FlipDirection { LEFT, RIGHT, FORWARD, BACKWARD }
 
@@ -106,8 +110,8 @@ namespace TelloDroneController.src
         public class StreamOn { public static string GetCommand() { return "streamon"; } }
         public class StreamOff { public static string GetCommand() { return "streamoff"; } }
 
-        public class Forward 
-        { 
+        public class Forward
+        {
             public static string GetCommand(int X)
             {
                 string baseCmd = "forward";
@@ -206,8 +210,8 @@ namespace TelloDroneController.src
             }
         }
 
-        public class Go 
-        { 
+        public class Go
+        {
             public static string GetCommand(int X, int Y, int Z, int Speed)
             {
                 string baseCmd = "go";
@@ -289,6 +293,16 @@ namespace TelloDroneController.src
                 TelloCommand.ValidateIntegerParameter(baseCmd, "X", X, 10, 100);
                 return String.Format("{0} {1}", baseCmd, X);
             }
+        }
+
+        public class Query
+        {
+            public class Speed { public static string GetCommand() { return "speed?"; } }
+            public class Battery { public static string GetCommand() { return "battery?"; } }
+            public class Time { public static string GetCommand() { return "time?"; } }
+            public class Wifi { public static string GetCommand() { return "wifi?"; } }
+            public class SDK { public static string GetCommand() { return "sdk?"; } }
+            public class SerialNumber { public static string GetCommand() { return "sn?"; } }
         }
 
     }

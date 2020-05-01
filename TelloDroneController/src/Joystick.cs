@@ -14,6 +14,7 @@ namespace TelloDroneController.src
             image = JoystickImage;
             xPos = 0;
             yPos = 0;
+            locked = false;
             imgWidth = JoystickImage.Width;
             imgHeight = JoystickImage.Height;
             originalXPos = Background.Width / 2 - imgWidth / 2;
@@ -36,6 +37,7 @@ namespace TelloDroneController.src
 
         private double originalXPos, originalYPos;
         private double imgWidth, imgHeight;
+        private bool locked;
 
         private enum Axis { X, Y }
 
@@ -51,26 +53,43 @@ namespace TelloDroneController.src
 
         public void PullUp()
         {
+            if (locked) return;
             yPos += GetMoveUnit(yPos, 1);
             AdjustImage();
         }
 
         public void PullDown()
         {
+            if (locked) return;
             yPos += GetMoveUnit(yPos, -1);
             AdjustImage();
         }
 
         public void PullRight()
         {
+            if (locked) return;
             xPos += GetMoveUnit(xPos, 1);
             AdjustImage();
         }
 
         public void PullLeft()
         {
+            if (locked) return;
             xPos += GetMoveUnit(xPos, -1);
             AdjustImage();
+        }
+
+        public void LockStillPosition()
+        {
+            xPos = 0;
+            yPos = 0;
+            AdjustImage();
+            locked = true;
+        }
+
+        public void Unlock()
+        {
+            locked = false;
         }
 
         private int GetMoveUnit(int ActualPos, int Direction)
@@ -92,6 +111,7 @@ namespace TelloDroneController.src
 
         public void AutoAdjust(bool IsXControllerKeyDown, bool IsYControllerKeyDown)
         {
+            if (locked) return;
             xPos += GetAutoAdjustUnit(IsXControllerKeyDown, IsYControllerKeyDown, xPos, Axis.X);
             yPos += GetAutoAdjustUnit(IsXControllerKeyDown, IsYControllerKeyDown, yPos, Axis.Y);
             AdjustImage();

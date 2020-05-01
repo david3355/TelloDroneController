@@ -103,11 +103,11 @@ namespace TelloDroneController.src
             eventHandler.CommandSent(DroneCommand, true);
         }
 
-        private void SendCommandWaitResponse(string DroneCommand)
+        private DroneResponse SendCommandWaitResponse(string DroneCommand)
         {
             lock (commandQueue)
             {
-                if (commandQueue.Count > 0) return;
+                if (commandQueue.Count > 0) return null;
                 commandQueue.Enqueue(DroneCommand);
                 commanderSender.Send(DroneCommand);
                 eventHandler.CommandSent(DroneCommand, false);
@@ -125,8 +125,10 @@ namespace TelloDroneController.src
                 {
                     response = responseQueue.Dequeue();
                     if (eventHandler != null) eventHandler.ReceiveTelloResponse(response.Host, response.Port, DroneCommand, response.Response);
+                    return response;
                 }
             }
+            return null;
         }
 
         private void ProcessCommandResponse(string SenderHostAddress, int SenderPort, string Response)
@@ -183,7 +185,7 @@ namespace TelloDroneController.src
 
         public void Emergency()
         {
-            ExecuteCommandAsync(TelloCommand.Emergency.GetCommand());
+            ExecuteCommandSync(TelloCommand.Emergency.GetCommand()); // Has to be sync, otherwise response cannot be processed
         }
 
         public void StreamOn()
@@ -268,11 +270,66 @@ namespace TelloDroneController.src
             RemoteControl(-100, -100, -100, 100);
         }
 
+        public void MakeDroneStill()
+        {
+            RemoteControl(0, 0, 0, 0);
+        }
+
         public void SetSpeed(int Speed)
         {
             ExecuteCommandSync(TelloCommand.SetSpeed.GetCommand(Speed));
         }
 
+
+        #endregion
+
+
+        #region Queries
+
+        private int GetInt(string QueryCommand, int DefaultValue)
+        {
+            DroneResponse response = SendCommandWaitResponse(QueryCommand);
+            int value = DefaultValue;
+            if (response != null) int.TryParse(response.Response, out value);
+            return value;
+        }
+
+        private string GetString(string QueryCommand, string DefaultValue = "")
+        {
+            DroneResponse response = SendCommandWaitResponse(QueryCommand);
+            if (response != null) return response.Response;
+            return DefaultValue;
+        }
+
+        public int GetSpeed()
+        {
+            return GetInt(TelloCommand.Query.Speed.GetCommand(), -1);
+        }
+
+        public int GetBattery()
+        {
+            return GetInt(TelloCommand.Query.Battery.GetCommand(), -1);
+        }
+
+        public string GetTime()
+        {
+            return GetString(TelloCommand.Query.Time.GetCommand());
+        }
+
+        public string GetWifiSignalStrength()
+        {
+            return GetString(TelloCommand.Query.Wifi.GetCommand());
+        }
+
+        public string GetSDK()
+        {
+            return GetString(TelloCommand.Query.SDK.GetCommand());
+        }
+
+        public string GetSerialNumber()
+        {
+            return GetString(TelloCommand.Query.SerialNumber.GetCommand());
+        }
 
         #endregion
 
