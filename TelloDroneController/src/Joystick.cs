@@ -23,7 +23,7 @@ namespace TelloDroneController.src
         }
 
         private FrameworkElement image;
-        private int xPos, yPos;
+        private double xPos, yPos;
 
         private const int DEFAULT_BOUNDARY = 100;
 
@@ -43,12 +43,12 @@ namespace TelloDroneController.src
 
         public int XPosition
         {
-            get { return xPos; }
+            get { return (int)xPos; }
         }
 
         public int YPosition
         {
-            get { return yPos; }
+            get { return (int)yPos; }
         }
 
         public void PullUp()
@@ -92,20 +92,30 @@ namespace TelloDroneController.src
             locked = false;
         }
 
-        private int GetMoveUnit(int ActualPos, int Direction)
+        private double JoystickForceFunction(double ActualPosition)
         {
-            int max = (int)Math.Round(Math.Sqrt(DEFAULT_BOUNDARY), 0);
-            int square = (int)Math.Sqrt(Math.Abs(ActualPos));
-            int moveUnit = max - square;
-            if (Math.Abs(ActualPos) + moveUnit > DEFAULT_BOUNDARY) moveUnit = DEFAULT_BOUNDARY - Math.Abs(ActualPos);
+            if (ActualPosition < 10) return 10;
+            else if (ActualPosition < 20) return 9;
+            else if (ActualPosition < 30) return 8;
+            else if (ActualPosition < 40) return 5;
+            else if (ActualPosition < 50) return 4;
+            else if (ActualPosition < 60) return 2;
+            else if (ActualPosition < 100) return 0.1;
+            return 0;
+        }
+
+        private double GetMoveUnit(double ActualPos, int Direction)
+        {
+            double moveUnit = JoystickForceFunction(Math.Abs(ActualPos));
+            if (Math.Abs(ActualPos) + moveUnit > DEFAULT_BOUNDARY) moveUnit = DEFAULT_BOUNDARY - Math.Abs((int)ActualPos);
             return Direction * moveUnit;
         }
 
-        private int GetAutoAdjustUnit(bool IsXControllerKeyDown, bool IsYControllerKeyDown, int ActualPos, Axis Axis)
+        private int GetAutoAdjustUnit(bool IsXControllerKeyDown, bool IsYControllerKeyDown, double ActualPos, Axis Axis)
         {
             int adjustment = ADJUST_MOVE_UNIT_NO_KEYDOWN;
             if ((IsXControllerKeyDown && Axis == Axis.X) || (IsYControllerKeyDown && Axis == Axis.Y)) adjustment = ADJUST_MOVE_UNIT_KEYDOWN;
-            if (Math.Abs(ActualPos) - adjustment < 0) adjustment = Math.Abs(ActualPos);
+            if (Math.Abs(ActualPos) - adjustment < 0) adjustment = Math.Abs((int)ActualPos);
             return ActualPos > 0 ? -adjustment : adjustment;
         }
 

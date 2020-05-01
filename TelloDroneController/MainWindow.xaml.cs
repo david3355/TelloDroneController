@@ -28,7 +28,7 @@ namespace TelloDroneController
             leftJoystick = new Joystick(img_left_joystick, left_joystick_panel);
             rightJoystick = new Joystick(img_right_joystick, right_joystick_panel);
             joystickAdjuster = new DispatcherTimer();
-            joystickAdjuster.Interval = new TimeSpan(10000);
+            joystickAdjuster.Interval = new TimeSpan(15000);
             joystickAdjuster.Tick += joystickAdjuster_Tick;
             joystickAdjuster.Start();
             red = new SolidColorBrush((Color)App.Current.TryFindResource("color_red"));
