@@ -66,14 +66,16 @@ namespace TelloDroneController.src
             try
             {
                 string command = TelloCommand.SetSpeed.GetCommand(newSpeed);
-                SendCommand(command);
-                speed = newSpeed;
-                return true;
+                DroneResponse resp = SendCommandWaitResponse(command);
+                if (resp.Response == DroneResponseValue.OK)
+                {
+                    speed = newSpeed;
+                    return true;
+                }
             }
             catch (CommandIntegerParamException e)
-            {
-                return false;
-            }
+            {}
+            return false;
         }
 
         public bool DecreaseSpeed(int By = 5)

@@ -334,7 +334,7 @@ namespace TelloDroneController
 
         public void ReceiveTelloResponse(string SenderHostAddress, int SenderPort, string LastCommand, string Response)
         {
-            if (LastCommand == TelloCommand.Emergency.GetCommand() && Response == DroneResponse.OK)
+            if (LastCommand == TelloCommand.Emergency.GetCommand() && Response == DroneResponseValue.OK)
             {
                 joystickDataSender.Stop();
                 UnlockJoystick();
@@ -342,7 +342,7 @@ namespace TelloDroneController
 
             this.Dispatcher.Invoke(new Action(() =>
             {
-                if (Response == DroneResponse.OK) txt_response.Background = green;
+                if (Response == DroneResponseValue.OK) txt_response.Background = green;
                 else txt_response.Background = red;
                 txt_response.Text = String.Format("Processing response of [{1}] command: {0}", Response, LastCommand);
             }));

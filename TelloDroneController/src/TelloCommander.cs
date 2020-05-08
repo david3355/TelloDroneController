@@ -84,7 +84,7 @@ namespace TelloDroneController.src
         }
     }
 
-    public class DroneResponse
+    public class DroneResponseValue
     {
         public const string OK = "ok";
     }
