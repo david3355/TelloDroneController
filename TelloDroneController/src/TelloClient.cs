@@ -83,18 +83,30 @@ namespace TelloDroneController.src
             return IncreaseSpeed(-By);
         }
 
-        private void ExecuteCommandSync(string DroneCommand)
+        /// <summary>
+        /// Executes the given command on a separate thread (asynchronously), but thread finishes only when the response is received
+        /// </summary>
+        /// <param name="DroneCommand"></param>
+        private void ExecuteCommandAsyncWaitResponse(string DroneCommand)
         {
-            Thread executor = new Thread(new ParameterizedThreadStart(AsyncCommandExecutor));
+            Thread executor = new Thread(new ParameterizedThreadStart(ExecuteCommandSyncWaitResponse));
             executor.Start(DroneCommand);
         }
 
-        private void ExecuteCommandAsync(string DroneCommand)
+        /// <summary>
+        /// Executes the command on the caller thread (synchronously). Returns immmediately, without waiting for the response
+        /// </summary>
+        /// <param name="DroneCommand"></param>
+        private void ExecuteCommandSyncNoWaitResponse(string DroneCommand)
         {
             SendCommand(DroneCommand);
         }
 
-        private void AsyncCommandExecutor(object Parameter)
+        /// <summary>
+        ///  Executes the given command on the caller thread (synchronously), and blocks the thread until response is received
+        /// </summary>
+        /// <param name="Parameter"></param>
+        private void ExecuteCommandSyncWaitResponse(object Parameter)
         {
             SendCommandWaitResponse((string)Parameter);
         }
@@ -172,99 +184,109 @@ namespace TelloDroneController.src
 
         public void Command()
         {
-            ExecuteCommandSync(TelloCommand.Command.GetCommand());
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Command.GetCommand());
         }
 
         public void TakeOff()
         {
-            ExecuteCommandSync(TelloCommand.TakeOff.GetCommand());
+            ExecuteCommandAsyncWaitResponse(TelloCommand.TakeOff.GetCommand());
         }
 
         public void Land()
         {
-            ExecuteCommandAsync(TelloCommand.Land.GetCommand());
+            ExecuteCommandSyncNoWaitResponse(TelloCommand.Land.GetCommand());
         }
 
         public void Emergency()
         {
-            ExecuteCommandSync(TelloCommand.Emergency.GetCommand()); // Has to be sync, otherwise response cannot be processed
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Emergency.GetCommand()); // Has to be sync, otherwise response cannot be processed
         }
 
-        public void StreamOn()
+        public bool StreamOn()
         {
-            ExecuteCommandSync(TelloCommand.StreamOn.GetCommand());
-            stream_on = true;
+            DroneResponse resp = SendCommandWaitResponse(TelloCommand.StreamOn.GetCommand());
+            if (resp.Response == DroneResponseValue.OK)
+            {
+                stream_on = true;
+                return true;
+            }
+            return false;
         }
 
-        public void StreamOff()
+        public bool StreamOff()
         {
-            ExecuteCommandSync(TelloCommand.StreamOff.GetCommand());
-            stream_on = false;
+            DroneResponse resp = SendCommandWaitResponse(TelloCommand.StreamOff.GetCommand());
+            if (resp.Response == DroneResponseValue.OK)
+            {
+                stream_on = false;
+                return true;
+            }
+            return false;
         }
 
         public void Forward(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Forward.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Forward.GetCommand(DistanceCM));
         }
 
         public void Backward(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Back.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Back.GetCommand(DistanceCM));
         }
 
         public void Left(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Left.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Left.GetCommand(DistanceCM));
         }
 
         public void Right(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Right.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Right.GetCommand(DistanceCM));
         }
 
         public void Up(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Up.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Up.GetCommand(DistanceCM));
         }
 
         public void Down(int DistanceCM)
         {
-            ExecuteCommandSync(TelloCommand.Down.GetCommand(DistanceCM));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Down.GetCommand(DistanceCM));
         }
 
         public void TurnLeft(int Degree)
         {
-            ExecuteCommandSync(TelloCommand.RotateCounterClockwise.GetCommand(Degree));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.RotateCounterClockwise.GetCommand(Degree));
         }
 
         public void TurnRight(int Degree)
         {
-            ExecuteCommandSync(TelloCommand.RotateClockwise.GetCommand(Degree));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.RotateClockwise.GetCommand(Degree));
         }
 
         public void Flip(FlipDirection Direction)
         {
-            ExecuteCommandSync(TelloCommand.Flip.GetCommand(Direction));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Flip.GetCommand(Direction));
         }
 
         public void Go(int X, int Y, int Z, int Speed)
         {
-            ExecuteCommandSync(TelloCommand.Go.GetCommand(X, Y, Z, Speed));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Go.GetCommand(X, Y, Z, Speed));
         }
 
         public void Curve(int X1, int Y1, int Z1, int X2, int Y2, int Z2, int Speed)
         {
-            ExecuteCommandSync(TelloCommand.Curve.GetCommand(X1, Y1, Z1, X2, Y2, Z2, Speed));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.Curve.GetCommand(X1, Y1, Z1, X2, Y2, Z2, Speed));
         }
 
         public void SetWifi(string SSID, string Password)
         {
-            ExecuteCommandSync(TelloCommand.SetWifi.GetCommand(SSID, Password));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.SetWifi.GetCommand(SSID, Password));
         }
 
         public void RemoteControl(int LeftRight, int ForwardBackward, int UpDown, int Yaw)
         {
-            ExecuteCommandAsync(TelloCommand.RemoteControl.GetCommand(LeftRight, ForwardBackward, UpDown, Yaw));
+            ExecuteCommandSyncNoWaitResponse(TelloCommand.RemoteControl.GetCommand(LeftRight, ForwardBackward, UpDown, Yaw));
         }
 
         public void StartRotors()
@@ -279,7 +301,7 @@ namespace TelloDroneController.src
 
         public void SetSpeed(int Speed)
         {
-            ExecuteCommandSync(TelloCommand.SetSpeed.GetCommand(Speed));
+            ExecuteCommandAsyncWaitResponse(TelloCommand.SetSpeed.GetCommand(Speed));
         }
 
 

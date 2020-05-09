@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using TelloDroneController.src;
 using System.Threading;
 using System.Windows.Threading;
+using System.IO;
 
 namespace TelloDroneController
 {
@@ -37,6 +38,7 @@ namespace TelloDroneController
             list_ips.ItemsSource = defaultIps;
             txt_drone_ip.Text = defaultIps[0];
             status = new DroneStatus();
+            videoReceiverStarted = false;
 
             joystickDataSender = new DispatcherTimer();
             joystickDataSender.Tick += JoystickControl;
@@ -53,6 +55,7 @@ namespace TelloDroneController
         private DispatcherTimer joystickDataSender;
         private int escapeTimes = 0;
         private DroneStatus status;
+        private bool videoReceiverStarted;
 
         private bool Init()
         {
@@ -226,19 +229,39 @@ namespace TelloDroneController
             }
         }
 
+        private void StartVideoReceiver()
+        {
+            string receiverScript = "video_receiver.py";
+            try
+            {
+                if (File.Exists(receiverScript))
+                {
+                    System.Diagnostics.Process.Start("python", receiverScript);
+                    videoReceiverStarted = true;
+                }
+                else MessageBox.Show(String.Format("Video receiver script not found: {0}", receiverScript));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Failed to start video receiver! Details: " + e.Message);
+            }
+        }
+
         private void SwitchStream(bool KeyDown)
         {
             if (client != null && KeyDown)
             {
                 if (client.IsStreamOn)
                 {
-                    client.StreamOff();
-                    img_stream_gray.Visibility = Visibility.Visible;
+                    if (client.StreamOff()) img_stream_gray.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    client.StreamOn();
-                    img_stream_gray.Visibility = Visibility.Collapsed;
+                    if (client.StreamOn())
+                    {
+                        if (!videoReceiverStarted) { new Thread(StartVideoReceiver).Start(); } // Must start on new thread otherwise wrong keyevent is raised!
+                        img_stream_gray.Visibility = Visibility.Collapsed;
+                    }
                 }
             }
         }
