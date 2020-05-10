@@ -71,6 +71,9 @@
     <Compile Include="src\TelloCommander.cs" />
     <Compile Include="src\TelloClient.cs" />
     <Compile Include="src\TelloEvents.cs" />
+    <Compile Include="VideoReceiverStarter.xaml.cs">
+      <DependentUpon>VideoReceiverStarter.xaml</DependentUpon>
+    </Compile>
     <Page Include="CurveEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -94,6 +97,10 @@
     <Page Include="res\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VideoReceiverStarter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

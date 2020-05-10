@@ -1,0 +1,26 @@
+﻿<Window x:Class="TelloDroneController.VideoReceiverStarter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Start Video Receiver" Height="150" Width="250" Icon="img/controller.png">
+    <Grid>
+        <Grid Margin="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Label Grid.Column="0" Grid.Row="0">Width:</Label>
+            <TextBox Name="txt_video_width" Grid.Column="1" Grid.Row="0" Margin="3"></TextBox>
+            <Label Grid.Column="0" Grid.Row="1">Height:</Label>
+            <TextBox Name="txt_video_height" Grid.Column="1" Grid.Row="1" Margin="3"></TextBox>
+            <Button Name="btn_start_video_receiver" Grid.Row="3" Grid.ColumnSpan="2" Width="130" Margin="10" Click="btn_start_video_receiver_Click">Start video receiver</Button>
+        </Grid>
+    </Grid>
+</Window>

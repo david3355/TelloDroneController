@@ -3,6 +3,7 @@ import cv2
 import pygame
 import numpy as np
 import time
+import sys
 
 # Frames per second of the pygame window display
 FPS = 25
@@ -10,12 +11,12 @@ FPS = 25
 
 class FrontEnd(object):
 
-    def __init__(self):
+    def __init__(self, window_width, window_height):
         # Init pygame
         pygame.init()
 
         # Creat pygame window
-        self.screen = pygame.display.set_mode([640, 480])  # [960, 720]
+        self.screen = pygame.display.set_mode([window_width, window_height])  # [960, 720]
 
         # Init Tello object that interacts with the Tello drone
         self.tello = Tello()
@@ -58,7 +59,12 @@ class FrontEnd(object):
 
 def main():
     try:
-        frontend = FrontEnd()
+        w = 640
+        h = 480
+        if len(sys.argv) == 3:
+            w = int(sys.argv[1])
+            h = int(sys.argv[2])
+        frontend = FrontEnd(w, h)
         frontend.run()
     except:
         pass

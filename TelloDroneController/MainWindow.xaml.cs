@@ -229,15 +229,15 @@ namespace TelloDroneController
             }
         }
 
-        private void StartVideoReceiver()
+        public static bool StartVideoReceiver(int Width, int Height)
         {
             string receiverScript = "video_receiver.py";
             try
             {
                 if (File.Exists(receiverScript))
                 {
-                    System.Diagnostics.Process.Start("python", receiverScript);
-                    videoReceiverStarted = true;
+                    System.Diagnostics.Process.Start("python", String.Format("{0} {1} {2}", receiverScript, Width, Height));
+                    return true;
                 }
                 else MessageBox.Show(String.Format("Video receiver script not found: {0}", receiverScript));
             }
@@ -245,6 +245,7 @@ namespace TelloDroneController
             {
                 MessageBox.Show("Failed to start video receiver! Details: " + e.Message);
             }
+            return false;
         }
 
         private void SwitchStream(bool KeyDown)
@@ -259,7 +260,14 @@ namespace TelloDroneController
                 {
                     if (client.StreamOn())
                     {
-                        if (!videoReceiverStarted) { new Thread(StartVideoReceiver).Start(); } // Must start on new thread otherwise wrong keyevent is raised!
+                        if (!videoReceiverStarted) 
+                        {
+                            // Must start on new thread otherwise wrong keyevent is raised!
+                            new Thread(() => 
+                                {
+                                    if (StartVideoReceiver(640, 480)) videoReceiverStarted = true;
+                                }).Start();
+                        } 
                         img_stream_gray.Visibility = Visibility.Collapsed;
                     }
                 }
@@ -449,6 +457,12 @@ namespace TelloDroneController
         {
             Queries queries = new Queries(client);
             queries.Show();
+        }
+
+        private void menu_start_video_receiver_Click(object sender, RoutedEventArgs e)
+        {
+            VideoReceiverStarter vrs = new VideoReceiverStarter();
+            vrs.Show();
         }
     }
 }
