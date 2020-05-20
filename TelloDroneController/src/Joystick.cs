@@ -25,7 +25,7 @@ namespace TelloDroneController.src
         private FrameworkElement image;
         private double xPos, yPos;
 
-        private const int DEFAULT_BOUNDARY = 100;
+        private const int DEFAULT_BOUNDARY = 99;
 
         private const int maxXPos = DEFAULT_BOUNDARY;
         private const int maxYPos = DEFAULT_BOUNDARY;
@@ -51,32 +51,38 @@ namespace TelloDroneController.src
             get { return (int)yPos; }
         }
 
-        public void PullUp()
+        public void PullUp(bool FunctionKeyDown = false)
         {
             if (locked) return;
-            yPos += GetMoveUnit(yPos, 1);
+            AdjustAxis(ref yPos, 1, FunctionKeyDown);
             AdjustImage();
         }
 
-        public void PullDown()
+        public void PullDown(bool FunctionKeyDown = false)
         {
             if (locked) return;
-            yPos += GetMoveUnit(yPos, -1);
+            AdjustAxis(ref yPos, -1, FunctionKeyDown);
             AdjustImage();
         }
 
-        public void PullRight()
+        public void PullRight(bool FunctionKeyDown = false)
         {
             if (locked) return;
-            xPos += GetMoveUnit(xPos, 1);
+            AdjustAxis(ref xPos, 1, FunctionKeyDown);
             AdjustImage();
         }
 
-        public void PullLeft()
+        public void PullLeft(bool FunctionKeyDown = false)
         {
             if (locked) return;
-            xPos += GetMoveUnit(xPos, -1);
+            AdjustAxis(ref xPos, -1, FunctionKeyDown);
             AdjustImage();
+        }
+
+        private void AdjustAxis(ref double AxisValue, int Direction, bool FunctionKeyDown)
+        {
+            if (FunctionKeyDown) AxisValue = 99 * Direction;
+            else AxisValue += GetMoveUnit(AxisValue, Direction);
         }
 
         public void LockStillPosition()

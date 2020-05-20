@@ -69,21 +69,25 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Name="img_start_rotors" Grid.Column="0" Source="img/start_rotor.png" Margin="5" />
-            <Image Name="img_start_rotors_gray" Grid.Column="0" Source="img/start_rotor_gray.png" Margin="5" ToolTip="Start rotors (Left Control)" />
+            <Image Name="img_go_fast" Grid.Column="0" Source="img/fast_forward.png" Margin="5" />
+            <Image Name="img_go_fast_gray" Grid.Column="0" Source="img/fast_forward_gray.png" Margin="5" ToolTip="Go Faster (Left Shift)" />
+            
+            <Image Name="img_start_rotors" Grid.Column="1" Source="img/start_rotor.png" Margin="5" />
+            <Image Name="img_start_rotors_gray" Grid.Column="1" Source="img/start_rotor_gray.png" Margin="5" ToolTip="Start rotors (R)" />
 
-            <Image Name="img_takeoff" Grid.Column="1" Source="img/takeoff.png" Margin="5" />
-            <Image Name="img_takeoff_gray" Grid.Column="1" Source="img/takeoff_gray.png" Margin="5" ToolTip="Take off (Enter)" />
+            <Image Name="img_takeoff" Grid.Column="2" Source="img/takeoff.png" Margin="5" />
+            <Image Name="img_takeoff_gray" Grid.Column="2" Source="img/takeoff_gray.png" Margin="5" ToolTip="Take off (Enter)" />
 
-            <Image Name="img_land" Grid.Column="2" Source="img/land.png" Margin="5" />
-            <Image Name="img_land_gray" Grid.Column="2" Source="img/land_gray.png" Margin="5" ToolTip="Land (Space)" />
+            <Image Name="img_land" Grid.Column="3" Source="img/land.png" Margin="5" />
+            <Image Name="img_land_gray" Grid.Column="3" Source="img/land_gray.png" Margin="5" ToolTip="Land (Space)" />
 
-            <Image Name="img_emergency" Grid.Column="3" Source="img/emergency.png" Margin="5" />
-            <Image Name="img_emergency_gray" Grid.Column="3" Source="img/emergency_gray.png" Margin="5" ToolTip="Emergency (Escape)"/>
+            <Image Name="img_emergency" Grid.Column="4" Source="img/emergency.png" Margin="5" />
+            <Image Name="img_emergency_gray" Grid.Column="4" Source="img/emergency_gray.png" Margin="5" ToolTip="Emergency (Escape)"/>
 
-            <Image Name="img_stream" Grid.Column="4" Source="img/camera.png" Margin="5" ToolTip="Stream is ON (P)" />
-            <Image Name="img_stream_gray" Grid.Column="4" Source="img/camera_gray.png" Margin="5" ToolTip="Stream is OFF (P)"/>
+            <Image Name="img_stream" Grid.Column="5" Source="img/camera.png" Margin="5" ToolTip="Stream is ON (P)" />
+            <Image Name="img_stream_gray" Grid.Column="5" Source="img/camera_gray.png" Margin="5" ToolTip="Stream is OFF (P)"/>
         </Grid>
         <Grid Name="control_panel" DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
@@ -146,19 +150,19 @@
                 </Grid.RowDefinitions>
                 <Image Name="img_up" Grid.Column="1" Grid.Row="0" Margin="5" Source="img/up.png" />
                 <Image Name="img_up_gray" Grid.Column="1" Grid.Row="0" Margin="5" Source="img/up_gray.png" ToolTip="Go up (Up arrow)" />
-                <Image Name="img_flip_forward" Visibility="Collapsed" Grid.Column="1" Grid.Row="0" Margin="5" Source="img/flip_forward.png" ToolTip="Flip forward (Shift + Up arrow)" />
+                <Image Name="img_flip_forward" Visibility="Collapsed" Grid.Column="1" Grid.Row="0" Margin="5" Source="img/flip_forward.png" ToolTip="Flip forward (Left Ctrl + Up arrow)" />
 
                 <Image Name="img_down" Grid.Column="1" Grid.Row="2" Margin="5" Source="img/down.png" />
                 <Image Name="img_down_gray" Grid.Column="1" Grid.Row="2" Margin="5" Source="img/down_gray.png" ToolTip="Go down (Down arrow)"  />
-                <Image Name="img_flip_backward" Visibility="Collapsed" Grid.Column="1" Grid.Row="2" Margin="5" Source="img/flip_backward.png" ToolTip="Flip backward (Shift + Down arrow)" />
+                <Image Name="img_flip_backward" Visibility="Collapsed" Grid.Column="1" Grid.Row="2" Margin="5" Source="img/flip_backward.png" ToolTip="Flip backward (Left Ctrl + Down arrow)" />
 
                 <Image Name="img_ccw" Grid.Column="0" Grid.Row="1" Margin="5" Source="img/counter_clockwise.png" />
                 <Image Name="img_ccw_gray" Grid.Column="0" Grid.Row="1" Margin="5" Source="img/counter_clockwise_gray.png" ToolTip="Rotate right (Right arrow)" />
-                <Image Name="img_flip_left" Visibility="Collapsed" Grid.Column="0" Grid.Row="1" Margin="5" Source="img/flip_left.png" ToolTip="Flip left (Shift + Right arrow)" />
+                <Image Name="img_flip_left" Visibility="Collapsed" Grid.Column="0" Grid.Row="1" Margin="5" Source="img/flip_left.png" ToolTip="Flip left (Left Ctrl + Right arrow)" />
 
                 <Image Name="img_cw" Grid.Column="2" Grid.Row="1" Margin="5" Source="img/clockwise.png" />
                 <Image Name="img_cw_gray" Grid.Column="2" Grid.Row="1" Margin="5" Source="img/clockwise_gray.png" ToolTip="Rotate left (Left arrow)"  />
-                <Image Name="img_flip_right" Visibility="Collapsed" Grid.Column="2" Grid.Row="1" Margin="5" Source="img/flip_right.png" ToolTip="Flip right (Shift + Left arrow)" />
+                <Image Name="img_flip_right" Visibility="Collapsed" Grid.Column="2" Grid.Row="1" Margin="5" Source="img/flip_right.png" ToolTip="Flip right (Left Ctrl + Left arrow)" />
 
                 <Image Name="img_right_joystick_gray" Grid.Column="1" Grid.Row="1" Width="20" Height="20" Source="img/joystick_gray.png" ToolTip="Right Joystick" />
 

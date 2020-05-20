@@ -107,16 +107,17 @@ namespace TelloDroneController
         private void AdjustJoystick()
         {
             if (!joystickMode) return;
-            bool shiftDown = Keyboard.IsKeyDown(Key.LeftShift);
+            bool flipFunctionKeyDown = Keyboard.IsKeyDown(Key.LeftCtrl);
+            bool speedFunctionKeyDown = Keyboard.IsKeyDown(Key.LeftShift);
 
-            if (Keyboard.IsKeyDown(Key.W)) leftJoystick.PullUp();
-            if (Keyboard.IsKeyDown(Key.S)) leftJoystick.PullDown();
-            if (Keyboard.IsKeyDown(Key.A)) leftJoystick.PullLeft();
-            if (Keyboard.IsKeyDown(Key.D)) leftJoystick.PullRight();
-            if (Keyboard.IsKeyDown(Key.Up) && !shiftDown) rightJoystick.PullUp();
-            if (Keyboard.IsKeyDown(Key.Down) && !shiftDown) rightJoystick.PullDown();
-            if (Keyboard.IsKeyDown(Key.Left) && !shiftDown) rightJoystick.PullLeft();
-            if (Keyboard.IsKeyDown(Key.Right) && !shiftDown) rightJoystick.PullRight();
+            if (Keyboard.IsKeyDown(Key.W)) leftJoystick.PullUp(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.S)) leftJoystick.PullDown(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.A)) leftJoystick.PullLeft(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.D)) leftJoystick.PullRight(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.Up) && !flipFunctionKeyDown) rightJoystick.PullUp(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.Down) && !flipFunctionKeyDown) rightJoystick.PullDown(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.Left) && !flipFunctionKeyDown) rightJoystick.PullLeft(speedFunctionKeyDown);
+            if (Keyboard.IsKeyDown(Key.Right) && !flipFunctionKeyDown) rightJoystick.PullRight(speedFunctionKeyDown);
         }
 
         private void SwitchKeyEvent(bool KeyDown, KeyEventArgs e)
@@ -125,11 +126,14 @@ namespace TelloDroneController
             int defaultDistance = 35;
             int defaultTurnDegree = 20;
 
-            bool shiftDown = Keyboard.IsKeyDown(Key.LeftShift);
+            bool flipFunctionKeyDown = Keyboard.IsKeyDown(Key.LeftCtrl);
+            bool speedFunctionKeyDown = Keyboard.IsKeyDown(Key.LeftShift);
 
-            if (joystickMode && !joystickDataSender.IsEnabled && e.Key == Key.Up && !shiftDown) joystickDataSender.Start();
 
-            FlipShift(shiftDown);
+            if (joystickMode && !joystickDataSender.IsEnabled && e.Key == Key.Up && !flipFunctionKeyDown) joystickDataSender.Start();
+
+            FlipShift(flipFunctionKeyDown);
+            SpeedShift(speedFunctionKeyDown);
 
             if (KeyDown && e.Key != Key.Escape)
             {
@@ -146,29 +150,29 @@ namespace TelloDroneController
                     case Key.A: HandleKeyEvent(KeyDown, img_left_gray); if (KeyDown && !joystickMode) client.Left(defaultDistance); break;
                     case Key.D: HandleKeyEvent(KeyDown, img_right_gray); if (KeyDown && !joystickMode) client.Right(defaultDistance); break;
                     case Key.Up:
-                        HandleKeyEvent(KeyDown, img_up_gray, shiftDown, img_flip_forward);
-                        if (KeyDown && !joystickMode && !shiftDown) client.Up(defaultDistance);
-                        if (KeyDown && shiftDown) client.Flip(FlipDirection.FORWARD);
+                        HandleKeyEvent(KeyDown, img_up_gray, flipFunctionKeyDown, img_flip_forward);
+                        if (KeyDown && !joystickMode && !flipFunctionKeyDown) client.Up(defaultDistance);
+                        if (KeyDown && flipFunctionKeyDown) client.Flip(FlipDirection.FORWARD);
                         break;
                     case Key.Down: 
-                        HandleKeyEvent(KeyDown, img_down_gray, shiftDown, img_flip_backward); 
-                        if (KeyDown && !joystickMode && !shiftDown) client.Down(defaultDistance);
-                        if (KeyDown && shiftDown) client.Flip(FlipDirection.BACKWARD);
+                        HandleKeyEvent(KeyDown, img_down_gray, flipFunctionKeyDown, img_flip_backward); 
+                        if (KeyDown && !joystickMode && !flipFunctionKeyDown) client.Down(defaultDistance);
+                        if (KeyDown && flipFunctionKeyDown) client.Flip(FlipDirection.BACKWARD);
                         break;
                     case Key.Left: 
-                        HandleKeyEvent(KeyDown, img_ccw_gray, shiftDown, img_flip_left); 
-                        if (KeyDown && !joystickMode && !shiftDown) client.TurnLeft(defaultTurnDegree);
-                        if (KeyDown && shiftDown) client.Flip(FlipDirection.LEFT);
+                        HandleKeyEvent(KeyDown, img_ccw_gray, flipFunctionKeyDown, img_flip_left); 
+                        if (KeyDown && !joystickMode && !flipFunctionKeyDown) client.TurnLeft(defaultTurnDegree);
+                        if (KeyDown && flipFunctionKeyDown) client.Flip(FlipDirection.LEFT);
                         break;
                     case Key.Right:
-                        HandleKeyEvent(KeyDown, img_cw_gray, shiftDown, img_flip_right); 
-                        if (KeyDown && !joystickMode && !shiftDown) client.TurnRight(defaultTurnDegree);
-                        if (KeyDown && shiftDown) client.Flip(FlipDirection.RIGHT);
+                        HandleKeyEvent(KeyDown, img_cw_gray, flipFunctionKeyDown, img_flip_right); 
+                        if (KeyDown && !joystickMode && !flipFunctionKeyDown) client.TurnRight(defaultTurnDegree);
+                        if (KeyDown && flipFunctionKeyDown) client.Flip(FlipDirection.RIGHT);
                         break;
                     case Key.Space: HandleKeyEvent(KeyDown, img_land_gray); if (KeyDown) client.Land(); joystickDataSender.Stop(); break;
                     case Key.Escape: HandleKeyEvent(KeyDown, img_emergency_gray); if (KeyDown) HandleEmergency(); break;
                     case Key.Enter: HandleKeyEvent(KeyDown, img_takeoff_gray); if (KeyDown) client.TakeOff(); break;
-                    case Key.LeftCtrl: HandleKeyEvent(KeyDown, img_start_rotors_gray); if (KeyDown) client.StartRotors(); break;
+                    case Key.R: HandleKeyEvent(KeyDown, img_start_rotors_gray); if (KeyDown) client.StartRotors(); break;
 
                     case Key.Q: HandleKeyEvent(KeyDown, img_dec_speed_gray); if (KeyDown) client.DecreaseSpeed(); break;
                     case Key.E: HandleKeyEvent(KeyDown, img_inc_speed_gray); if (KeyDown) client.IncreaseSpeed(); break;
@@ -193,9 +197,14 @@ namespace TelloDroneController
             txt_current_speed.Content = client.CurrentSpeed;
         }
 
-        private void FlipShift(bool ShiftKeyDown)
+        private void SpeedShift(bool SpeedFunctionKeyDown)
         {
-            if (ShiftKeyDown)
+            img_go_fast_gray.Visibility = SpeedFunctionKeyDown ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void FlipShift(bool FlipFunctionKeyDown)
+        {
+            if (FlipFunctionKeyDown)
             {
                 img_flip_forward.Visibility = Visibility.Visible;
                 img_flip_backward.Visibility = Visibility.Visible;
@@ -274,14 +283,14 @@ namespace TelloDroneController
             }
         }
 
-        private void HandleKeyEvent(bool KeyDown, Image ActionImage, bool ShiftDown = false, Image ShiftActionImage = null)
+        private void HandleKeyEvent(bool KeyDown, Image ActionImage, bool FlipFunctionKeyDown = false, Image FlipShiftActionImage = null)
         {
-            if (ShiftDown)
+            if (FlipFunctionKeyDown)
             {
-                if (ShiftActionImage != null)
+                if (FlipShiftActionImage != null)
                 {
-                    if (KeyDown) ShiftActionImage.Margin = new Thickness(0);
-                    else ShiftActionImage.Margin = new Thickness(5);
+                    if (KeyDown) FlipShiftActionImage.Margin = new Thickness(0);
+                    else FlipShiftActionImage.Margin = new Thickness(5);
                 }
             }
             else
